@@ -50,10 +50,11 @@ describe Net::HTTP::RequestParser do
     end
 
     it "should parse absolute URIs paths" do
-      request = subject.parse("GET http://www.example.com/path HTTP/1.1\r\n\r\n")
+      request = subject.parse("GET http://www.example.com:8080/path HTTP/1.1\r\n\r\n")
 
       request[:uri][:scheme].should == 'http'
       request[:uri][:host].should == 'www.example.com'
+      request[:uri][:port].should == '8080'
       request[:uri][:path].should == 'path'
     end
 
