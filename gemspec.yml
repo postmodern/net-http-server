@@ -1,4 +1,5 @@
 name: net-http-server
+version: 0.1.0
 summary: A pure Ruby HTTP Server
 description: A Rack compatible pure Ruby HTTP Server.
 license: MIT
