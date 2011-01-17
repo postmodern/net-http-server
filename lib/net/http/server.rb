@@ -83,7 +83,11 @@ module Net
       #   The IO stream of the client.
       #
       def self.run(options={},&block)
-        new(options,&block).start
+        server = new(options,&block)
+
+        server.start
+        server.join
+        return server
       end
 
       #
