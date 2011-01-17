@@ -36,14 +36,14 @@ module Net
       # @option options [#call] :processor
       #   The HTTP Request Processor object.
       #
-      # @yield [request, stream]
+      # @yield [request, socket]
       #   If a block is given, it will be used to process HTTP Requests.
       #
       # @yieldparam [Hash{Symbol => String,Array,Hash}] request
       #   The HTTP Request.
       #
-      # @yieldparam [IO] stream
-      #   The IO stream of the client.
+      # @yieldparam [TCPSocket] socket
+      #   The TCP socket of the client.
       #
       def initialize(options={},&block)
         host = options.fetch(:host,DEFAULT_HOST)
@@ -73,14 +73,14 @@ module Net
       # @option options [#call] :processor
       #   The HTTP Request Processor object.
       #
-      # @yield [request, stream]
+      # @yield [request, socket]
       #   If a block is given, it will be used to process HTTP Requests.
       #
       # @yieldparam [Hash{Symbol => String,Array,Hash}] request
       #   The HTTP Request.
       #
-      # @yieldparam [IO] stream
-      #   The IO stream of the client.
+      # @yieldparam [TCPSocket] socket
+      #   The TCP socket of the client.
       #
       def self.run(options={},&block)
         server = new(options,&block)
@@ -96,14 +96,14 @@ module Net
       # @param [#call, nil] processor
       #   The HTTP Request Processor object.
       #
-      # @yield [request, stream]
+      # @yield [request, socket]
       #   If a block is given, it will be used to process HTTP Requests.
       #
       # @yieldparam [Hash{Symbol => String,Array,Hash}] request
       #   The HTTP Request.
       #
-      # @yieldparam [IO] stream
-      #   The IO stream of the client.
+      # @yieldparam [TCPSocket] socket
+      #   The TCP socket of the client.
       #
       # @raise [ArgumentError]
       #   The HTTP Request Processor must respond to `#call`.
@@ -120,10 +120,10 @@ module Net
         @processor = (processor || block)
       end
 
-      def serve(stream)
+      def serve(socket)
         buffer = []
 
-        request_line = stream.readline
+        request_line = socket.readline
 
         # the request line must contain 'HTTP/'
         unless request_line.include?('HTTP/')
@@ -133,7 +133,7 @@ module Net
 
         buffer << request_line
 
-        stream.each_line do |header|
+        socket.each_line do |header|
           buffer << header
 
           # a header line must contain a ':' character followed by
@@ -157,7 +157,7 @@ module Net
                   rescue Parslet::ParseFailed => error
                   end
 
-        @processor.call(request,stream) if request
+        @processor.call(request,socket) if request
       end
 
     end
