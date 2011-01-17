@@ -84,6 +84,7 @@ module Net
         ).repeat(1)
       }
 
+      rule(:all_paths) { str('*').as(:all) }
       rule(:path) { pchar.repeat(1) >> (str('/') >> pchar.repeat).repeat }
       rule(:query_string) { (uchar | reserved).repeat }
       rule(:param) { (pchar | str('/')).repeat }
@@ -106,7 +107,7 @@ module Net
         absolute_path
       }
 
-      rule(:request_uri) { str('*') | absolute_uri | absolute_path }
+      rule(:request_uri) { all_paths.as(:path) | absolute_uri | absolute_path }
 
       #
       # HTTP Elements

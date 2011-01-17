@@ -17,6 +17,18 @@ describe Net::HTTP::RequestParser do
       request[:method].should == 'FOO'
     end
 
+    it "should allow '*' as the path" do
+      request = subject.parse("OPTIONS * HTTP/1.1\r\n\r\n")
+
+      request[:uri][:path][:all].should be_true
+    end
+
+    it "should not confuse the '/*' path with '*'" do
+      request = subject.parse("OPTIONS /* HTTP/1.1\r\n\r\n")
+
+      request[:uri][:path].should == '*'
+    end
+
     it "should parse absolute paths" do
       request = subject.parse("GET /absolute/path HTTP/1.1\r\n\r\n")
 
