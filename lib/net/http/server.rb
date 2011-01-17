@@ -36,13 +36,13 @@ module Net
       # @option options [#call] :processor
       #   The HTTP Request Processor object.
       #
-      # @yield [request, io]
+      # @yield [request, stream]
       #   If a block is given, it will be used to process HTTP Requests.
       #
       # @yieldparam [Hash{Symbol => String,Array,Hash}] request
       #   The HTTP Request.
       #
-      # @yieldparam [IO] io
+      # @yieldparam [IO] stream
       #   The IO stream of the client.
       #
       def initialize(options={},&block)
@@ -73,13 +73,13 @@ module Net
       # @option options [#call] :processor
       #   The HTTP Request Processor object.
       #
-      # @yield [request, io]
+      # @yield [request, stream]
       #   If a block is given, it will be used to process HTTP Requests.
       #
       # @yieldparam [Hash{Symbol => String,Array,Hash}] request
       #   The HTTP Request.
       #
-      # @yieldparam [IO] io
+      # @yieldparam [IO] stream
       #   The IO stream of the client.
       #
       def self.run(options={},&block)
@@ -92,13 +92,13 @@ module Net
       # @param [#call, nil] processor
       #   The HTTP Request Processor object.
       #
-      # @yield [request, io]
+      # @yield [request, stream]
       #   If a block is given, it will be used to process HTTP Requests.
       #
       # @yieldparam [Hash{Symbol => String,Array,Hash}] request
       #   The HTTP Request.
       #
-      # @yieldparam [IO] io
+      # @yieldparam [IO] stream
       #   The IO stream of the client.
       #
       # @raise [ArgumentError]
@@ -116,10 +116,10 @@ module Net
         @processor = (processor || block)
       end
 
-      def serve(io)
+      def serve(stream)
         buffer = []
 
-        request_line = io.readline
+        request_line = stream.readline
 
         # the request line must contain 'HTTP/'
         unless request_line.include?('HTTP/')
@@ -129,7 +129,7 @@ module Net
 
         buffer << request_line
 
-        io.each_line do |header|
+        stream.each_line do |header|
           buffer << header
 
           # a header line must contain a ':' character followed by
@@ -153,7 +153,7 @@ module Net
                   rescue Parslet::ParseFailed => error
                   end
 
-        @processor.call(request,io) if request
+        @processor.call(request,stream) if request
       end
 
     end
