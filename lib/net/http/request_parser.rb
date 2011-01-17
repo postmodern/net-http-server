@@ -74,9 +74,14 @@ module Net
       rule(:scheme) {
         (alpha | digit | str('+') | str('-') | str('.')).repeat
       }
-
-      rule(:absolute_uri) {
-        scheme.as(:scheme) >> str(':') >> (uchar | reserved).repeat
+      rule(:host_name) {
+        (alnum | str('-') | str('_') | str('.')).repeat(1)
+      }
+      rule(:user_info) {
+        (
+          unreserved | escape | str(';') | str(':') | str('&') | str('=') |
+          str('+')
+        ).repeat(1)
       }
 
       rule(:path) { pchar.repeat(1) >> (str('/') >> pchar.repeat).repeat }
@@ -92,6 +97,14 @@ module Net
         (str('#') >> frag.as(:fragment)).maybe
       }
       rule(:absolute_path) { str('/').repeat(1) >> relative_path }
+
+      rule(:absolute_uri) {
+        scheme.as(:scheme) >> str(':') >> str('//').maybe >>
+        (user_info.as(:user_info) >> str('@')).maybe >>
+        host_name.as(:host) >>
+        (str(':') >> digits.as(:port)).maybe >>
+        absolute_path
+      }
 
       rule(:request_uri) { str('*') | absolute_uri | absolute_path }
 
