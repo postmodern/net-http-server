@@ -124,9 +124,12 @@ module Net
         end
 
         parser = RequestParser.new
-        request = parser.parse(buffer.join)
+        request = begin
+                    parser.parse(buffer.join)
+                  rescue Parslet::ParseFailed => error
+                  end
 
-        @processor.call(request,io)
+        @processor.call(request,io) if request
       end
 
     end
