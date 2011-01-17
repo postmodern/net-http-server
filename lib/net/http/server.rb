@@ -120,7 +120,7 @@ module Net
 
         io.each_line do |line|
           buffer << line
-          break if buffer[-1] == CRLF
+          break if line == CRLF
         end
 
         parser = RequestParser.new
