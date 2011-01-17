@@ -30,11 +30,11 @@ describe Net::HTTP::RequestParser do
       request[:uri][:params].should == 'q=1;p=2'
     end
 
-    it "should parse the query-params in the path" do
+    it "should parse the query-string in the path" do
       request = subject.parse("GET /path?q=1&p=2 HTTP/1.1\r\n\r\n")
 
       request[:uri][:path].should == 'path'
-      request[:uri][:query_string].should == 'q=1&p=2'
+      request[:uri][:query].should == 'q=1&p=2'
     end
 
     it "should parse absolute URIs paths" do

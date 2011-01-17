@@ -28,14 +28,14 @@ module Net
       rule(:crlf) { str("\r\n") }
 
       rule(:ctl) { cntrl | str("\x7f") }
-      rule(:text) { lws | ctl.absnt? >> ascii }
+      rule(:text) { lws | (ctl.absnt? >> ascii) }
       rule(:safe) { str('$') | str('-') | str('_') | str('.') }
       rule(:extra) {
         str('!') | str('*') | str("'") | str('(') | str(')') | str(',')
       }
       rule(:reserved) {
-        str(';') | str('/') | str('?') | str(':') | str('@')
-        str('&') | str('=') | str('+')
+        str(';') | str('/') | str('?') | str(':') | str('@') | str('&') |
+        str('=') | str('+')
       }
       rule(:sorta_safe) { str('"') | str('<') | str('>') }
       rule(:unsafe) { ctl | sp | str('#') | str('%') | sorta_safe }
@@ -76,7 +76,7 @@ module Net
       }
 
       rule(:absolute_uri) {
-        scheme >> str(':') >> (uchar | reserved).repeat
+        scheme.as(:scheme) >> str(':') >> (uchar | reserved).repeat
       }
 
       rule(:path) { pchar.repeat(1) >> (str('/') >> pchar.repeat).repeat }
