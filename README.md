@@ -16,11 +16,12 @@
 ## Examples
 
     require 'net/http/server'
+    require 'pp'
 
-    Net::HTTP::Server.run(:port => 8080) do |request,io|
+    Net::HTTP::Server.run(:port => 8080) do |request,socket|
       pp request
 
-      io.puts "Hello World!"
+      [200, {'Content-Type' => 'text/html'}, ['Hello World']]
     end
 
 ## Requirements
