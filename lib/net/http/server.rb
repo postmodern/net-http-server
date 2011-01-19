@@ -15,8 +15,64 @@ module Net
       # Maximum number of simultaneous connections.
       MAX_CONNECTIONS = 256
 
+      # The supported HTTP Server'
+      HTTP_VERSION = '1.1'
+
+      # The known HTTP Status codes and messages
+      HTTP_STATUSES = {
+        # 1xx
+        100 => 'Continue',
+        101 => 'Switching Protocols',
+        102 => 'Processing',
+        # 2xx
+        200 => 'OK',
+        201 => 'Created',
+        202 => 'Accepted',
+        203 => 'Non-Authoritative Information',
+        204 => 'No Content',
+        205 => 'Reset Content',
+        206 => 'Partial Content',
+        # 3xx
+        300 => 'Multiple Choices',
+        301 => 'Moved Permanently',
+        302 => 'Found',
+        303 => 'See Other',
+        304 => 'Not Modified',
+        305 => 'Use Proxy',
+        307 => 'Temporary Redirect',
+        # 4xx
+        400 => 'Bad Request',
+        401 => 'Unauthorized',
+        402 => 'Payment Required',
+        403 => 'Forbidden',
+        404 => 'Not Found',
+        405 => 'Method Not Allowed',
+        406 => 'Not Acceptable',
+        407 => 'Proxy Authentication Required',
+        408 => 'Request Time-out',
+        409 => 'Conflict',
+        410 => 'Gone',
+        411 => 'Length Required',
+        412 => 'Precondition Failed',
+        413 => 'Request Entity Too Large',
+        414 => 'Request-URI Too Large',
+        415 => 'Unsupported Media Type',
+        416 => 'Requested range not satisfiable',
+        417 => 'Expectation Failed',
+        # 5xx
+        500 => 'Internal Server Error',
+        501 => 'Not Implemented',
+        502 => 'Bad Gateway',
+        503 => 'Service Unavailable',
+        504 => 'Gateway Time-out',
+        505 => 'HTTP Version not supported extension-code'
+      }
+
       # Carriage Return (CR) followed by a Line Feed (LF).
       CRLF = "\r\n"
+
+      # Generic Bad Request response
+      BAD_REQUEST = [400, {}, ['Bad Request']]
 
       #
       # Creates a new HTTP Server.
@@ -121,7 +177,7 @@ module Net
       end
 
       def serve(socket)
-        buffer = []
+        buffer = ''
 
         request_line = socket.readline
 
@@ -151,13 +207,81 @@ module Net
           end
         end
 
-        parser = RequestParser.new
-        request = begin
-                    parser.parse(buffer.join)
-                  rescue Parslet::ParseFailed => error
-                  end
+        # rack compliant
+        status, headers, body = process_request(socket,buffer)
 
-        @processor.call(request,socket) if request
+        send_headers(socket,status,headers)
+        send_body(socket,body)
+      end
+
+      protected
+
+      #
+      # Processes a request received from the socket.
+      #
+      # @param [TCPSocket] socket
+      #   The socket that received the request.
+      #
+      # @param [String] raw_request
+      #   The received request.
+      #
+      # @return [Array<status, headers, body>]
+      #   The Rack compatible response.
+      #
+      def process_request(socket,raw_request)
+        parser = RequestParser.new
+
+        begin
+          request = parser.parse(raw_request)
+        rescue Parslet::ParseFailed => error
+          return BAD_REQUEST
+        end
+
+        @processor.call(request,socket)
+      end
+
+      #
+      # Write the stauts and headers of an HTTP Response to the socket.
+      #
+      # @param [TCPSocket] socket
+      #   The socket to write the headers back to.
+      #
+      # @param [Integer] status
+      #   The status of the HTTP Response.
+      #
+      # @param [Hash{String => String}] headers
+      #   The headers of the HTTP Response.
+      #
+      def send_headers(socket,status,headers)
+        status = status.to_i
+
+        reason = HTTP_STATUSES[status]
+        socket.write("HTTP/#{HTTP_VERSION} #{status} #{reason}#{CRLF}")
+
+        headers.each do |name,values|
+          values.each_line("\n") do |value|
+            socket.write("#{name}: #{value}#{CRLF}")
+          end
+        end
+
+        socket.write(CRLF)
+        socket.flush
+      end
+
+      #
+      # Writes the body of a HTTP Response to the socket.
+      #
+      # @param [TCPSocket] socket
+      #   The socket to write the headers back to.
+      #
+      # @param [#each] body
+      #   The body of the HTTP Response.
+      #
+      def send_body(socket,body)
+        body.each do |chunk|
+          socket.write(chunk)
+          socket.flush
+        end
       end
 
     end
