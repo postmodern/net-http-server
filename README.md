@@ -15,6 +15,8 @@
 
 ## Examples
 
+Simple HTTP Server:
+
     require 'net/http/server'
     require 'pp'
 
@@ -23,6 +25,12 @@
 
       [200, {'Content-Type' => 'text/html'}, ['Hello World']]
     end
+
+Use it with Rack:
+
+    require 'rack/handler/http'
+    
+    Rack::Handler::HTTP.run app
 
 ## Requirements
 
