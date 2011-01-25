@@ -91,8 +91,8 @@ module Net
       # @option options [Integer] :max_connections (MAX_CONNECTIONS)
       #   The maximum number of simultaneous connections.
       #
-      # @option options [#call] :processor
-      #   The HTTP Request Processor object.
+      # @option options [#call] :handler
+      #   The HTTP Request Handler object.
       #
       # @yield [request, socket]
       #   If a block is given, it will be used to process HTTP Requests.
@@ -110,7 +110,7 @@ module Net
 
         super(port,host,max_connections)
 
-        processor(options[:processor],&block)
+        handler(options[:handler],&block)
       end
 
       #
@@ -128,8 +128,8 @@ module Net
       # @option options [Integer] :max_connections (MAX_CONNECTIONS)
       #   The maximum number of simultaneous connections.
       #
-      # @option options [#call] :processor
-      #   The HTTP Request Processor object.
+      # @option options [#call] :handler
+      #   The HTTP Request Handler object.
       #
       # @yield [request, socket]
       #   If a block is given, it will be used to process HTTP Requests.
@@ -149,10 +149,10 @@ module Net
       end
 
       #
-      # Sets the HTTP Request Processor.
+      # Sets the HTTP Request Handler.
       #
-      # @param [#call, nil] processor
-      #   The HTTP Request Processor object.
+      # @param [#call, nil] object
+      #   The HTTP Request Handler object.
       #
       # @yield [request, socket]
       #   If a block is given, it will be used to process HTTP Requests.
@@ -164,18 +164,18 @@ module Net
       #   The TCP socket of the client.
       #
       # @raise [ArgumentError]
-      #   The HTTP Request Processor must respond to `#call`.
+      #   The HTTP Request Handler must respond to `#call`.
       #
-      def processor(processor=nil,&block)
-        if processor
-          unless processor.respond_to?(:call)
-            raise(ArgumentError,"HTTP Request Processor must respond to #call")
+      def handler(object=nil,&block)
+        if object
+          unless object.respond_to?(:call)
+            raise(ArgumentError,"HTTP Request Handler must respond to #call")
           end
         elsif block.nil?
-          raise(ArgumentError,"no HTTP Request Processor block given")
+          raise(ArgumentError,"no HTTP Request Handler block given")
         end
 
-        @processor = (processor || block)
+        @handler = (object || block)
       end
 
       def serve(socket)
@@ -244,7 +244,7 @@ module Net
 
         normalize_request(request)
 
-        @processor.call(request,socket)
+        @handler.call(request,socket)
       end
 
       #
