@@ -2,6 +2,7 @@ require 'net/http/request_parser'
 require 'net/http/request_normalizer'
 
 require 'gserver'
+require 'time'
 
 module Net
   module HTTP
@@ -264,8 +265,17 @@ module Net
         socket.write("HTTP/#{HTTP_VERSION} #{status} #{reason}#{CRLF}")
 
         headers.each do |name,values|
-          values.each_line("\n") do |value|
-            socket.write("#{name}: #{value}#{CRLF}")
+          case values
+          when String
+            values.each_line("\n") do |value|
+              socket.write("#{name}: #{value.chomp}#{CRLF}")
+            end
+          when Time
+            socket.write("#{name}: #{values.httpdate}#{CRLF}")
+          when Array
+            values.each do |value|
+              socket.write("#{name}: #{value}#{CRLF}")
+            end
           end
         end
 
