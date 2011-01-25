@@ -1,7 +1,9 @@
 require 'net/http/server/daemon'
 
+require 'net/protocol'
+
 module Net
-  module HTTP
+  class HTTP < Protocol
     module Server
       #
       # Starts the HTTP Server.

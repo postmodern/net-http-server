@@ -1,7 +1,8 @@
+require 'net/protocol'
 require 'parslet'
 
 module Net
-  module HTTP
+  class HTTP < Protocol
     module Server
       #
       # Inspired by:

@@ -1,5 +1,7 @@
+require 'net/protocol'
+
 module Net
-  module HTTP
+  class HTTP < Protocol
     module Server
       # net-http-server version.
       VERSION = '0.1.0'

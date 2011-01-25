@@ -1,7 +1,8 @@
+require 'net/protocol'
 require 'time'
 
 module Net
-  module HTTP
+  class HTTP < Protocol
     module Server
       module Responses
         # The supported HTTP Protocol.

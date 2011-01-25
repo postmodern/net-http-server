@@ -2,10 +2,11 @@ require 'net/http/server/parser'
 require 'net/http/server/requests'
 require 'net/http/server/responses'
 
+require 'net/protocol'
 require 'gserver'
 
 module Net
-  module HTTP
+  class HTTP < Protocol
     module Server
       class Daemon < GServer
 
