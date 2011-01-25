@@ -1,4 +1,5 @@
 require 'net/http/request_parser'
+require 'net/http/request_normalizer'
 
 require 'gserver'
 
@@ -216,6 +217,8 @@ module Net
 
       protected
 
+      include RequestNormalizer
+
       #
       # Processes a request received from the socket.
       #
@@ -236,6 +239,8 @@ module Net
         rescue Parslet::ParseFailed => error
           return BAD_REQUEST
         end
+
+        normalize_request(request)
 
         @processor.call(request,socket)
       end
