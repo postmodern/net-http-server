@@ -9,6 +9,8 @@ module Net
           'http' => 80
         }
 
+        protected
+
         #
         # Normalizes the `:uri` part of the request.
         #
