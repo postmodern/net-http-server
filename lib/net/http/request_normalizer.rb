@@ -32,7 +32,7 @@ module Net
             uri[:path].insert(0,'/')
           end
         elsif uri == '*'
-          request[:uri] = nil
+          request[:uri] = {}
         end
       end
 
