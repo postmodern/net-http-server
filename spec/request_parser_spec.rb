@@ -20,7 +20,7 @@ describe Net::HTTP::RequestParser do
     it "should allow '*' as the path" do
       request = subject.parse("OPTIONS * HTTP/1.1\r\n\r\n")
 
-      request[:uri][:path][:all].should be_true
+      request[:uri].should == '*'
     end
 
     it "should not confuse the '/*' path with '*'" do
