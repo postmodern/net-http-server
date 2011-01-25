@@ -16,7 +16,11 @@ module Rack
         'rack.errors' => STDERR,
         'rack.multithread' => true,
         'rack.multiprocess' => false,
-        'rack.run_once' => false
+        'rack.run_once' => false,
+        'rack.url_scheme' => 'http',
+
+        'SERVER_SOFTWARE' => "Net::HTTP::Server/#{Net::HTTP::Server::VERSION} (Ruby/#{RUBY_VERSION}/#{RUBY_RELEASE_DATE})",
+        'SCRIPT_NAME' => ''
       }
 
       # Special HTTP Headers used by Rack::Request
@@ -60,13 +64,12 @@ module Rack
       # Starts {Net::HTTP::Server} and begins handling HTTP Requests.
       #
       def run
-        @server = Net::HTTP::Server.new(
+        @server = Net::HTTP::Server.run(
           :host => @options[:Host],
           :port => @options[:Port].to_i,
           :handler => self
         )
 
-        @server.start
         @server.join
       end
 
@@ -83,17 +86,32 @@ module Rack
       #   The response status, headers and body.
       #
       def call(request,socket)
-        env = {
-          'rack.input' => socket,
-          'rack.url_scheme' => request[:uri].fetch(:scheme,'http'),
+        request_uri = request[:uri]
+        remote_address = socket.remote_address
+        local_address = socket.local_address
 
-          'REQUEST_METHOD' => request[:method],
-          'PATH_INFO' => request[:uri][:path],
-          'QUERY_STRING' => request[:uri][:query_string]
-        }
+        env = {}
 
         # add the default values
         env.merge!(DEFAULT_ENV)
+
+        # populate
+        env['rack.input'] = socket
+
+        if request_uri[:scheme]
+          env['rack.url_scheme'] = request_uri[:scheme]
+        end
+
+        env['SERVER_NAME'] = local_address.getnameinfo[0]
+        env['SERVER_PORT'] = local_address.ip_port.to_s
+        env['SERVER_PROTOCOL'] = "HTTP/#{request[:http_version]}"
+
+        env['REMOTE_ADDR'] = remote_address.ip_address
+        env['REMOTE_PORT'] = remote_address.ip_port.to_s
+
+        env['REQUEST_METHOD'] = request[:method]
+        env['PATH_INFO'] = request_uri.fetch(:path,'*')
+        env['QUERY_STRING'] = request_uri[:query_string].to_s
 
         # add the headers
         request[:headers].each do |name,value|
@@ -107,7 +125,12 @@ module Rack
             key.insert(0,'HTTP_')
           end
 
-          env[key] = value
+          env[key] = case value
+                     when Array
+                       value.join("\n")
+                     else
+                       value.to_s
+                     end
         end
 
         @app.call(env)

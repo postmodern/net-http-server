@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'net/http/request_parser'
+require 'net/http/server/parser'
 
-describe Net::HTTP::RequestParser do
+describe Net::HTTP::Server::Parser do
   it "should not parse garbage" do
     garbage = (1..255).map { |b| b.chr }.join * 100
 
