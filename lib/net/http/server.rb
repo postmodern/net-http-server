@@ -212,7 +212,8 @@ module Net
         # rack compliant
         status, headers, body = process_request(socket,buffer)
 
-        send_headers(socket,status,headers)
+        send_status(socket,status)
+        send_headers(socket,headers)
         send_body(socket,body)
       end
 
@@ -247,7 +248,7 @@ module Net
       end
 
       #
-      # Write the stauts and headers of an HTTP Response to the socket.
+      # Writes the status of an HTTP Response to the socket.
       #
       # @param [TCPSocket] socket
       #   The socket to write the headers back to.
@@ -255,15 +256,23 @@ module Net
       # @param [Integer] status
       #   The status of the HTTP Response.
       #
-      # @param [Hash{String => String}] headers
-      #   The headers of the HTTP Response.
-      #
-      def send_headers(socket,status,headers)
+      def send_status(socket,status)
         status = status.to_i
 
         reason = HTTP_STATUSES[status]
         socket.write("HTTP/#{HTTP_VERSION} #{status} #{reason}#{CRLF}")
+      end
 
+      #
+      # Write the headers of an HTTP Response to the socket.
+      #
+      # @param [TCPSocket] socket
+      #   The socket to write the headers back to.
+      #
+      # @param [Hash{String => String}] headers
+      #   The headers of the HTTP Response.
+      #
+      def send_headers(socket,headers)
         headers.each do |name,values|
           case values
           when String
