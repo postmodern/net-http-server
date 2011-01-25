@@ -10,6 +10,7 @@ module Net
     # * [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616.html)
     #
     class RequestParser < Parslet::Parser
+      
       #
       # Character Classes
       #
@@ -136,6 +137,7 @@ module Net
       }
 
       root :request
+
     end
   end
 end
