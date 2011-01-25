@@ -91,6 +91,9 @@ module Net
       # @option options [Integer] :max_connections (MAX_CONNECTIONS)
       #   The maximum number of simultaneous connections.
       #
+      # @option options [IO] :log (STDERR)
+      #   The log to write errors to.
+      #
       # @option options [#call] :handler
       #   The HTTP Request Handler object.
       #
@@ -107,8 +110,9 @@ module Net
         host = options.fetch(:host,DEFAULT_HOST)
         port = options.fetch(:port,DEFAULT_PORT)
         max_connections = options.fetch(:max_connections,MAX_CONNECTIONS)
+        log = options.fetch(:log,STDERR)
 
-        super(port,host,max_connections)
+        super(port,host,max_connections,log,false,true)
 
         handler(options[:handler],&block)
       end
@@ -144,7 +148,6 @@ module Net
         server = new(options,&block)
 
         server.start
-        server.join
         return server
       end
 
