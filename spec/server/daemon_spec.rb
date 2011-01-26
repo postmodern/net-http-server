@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'net/http/server/daemon'
 
 describe Net::HTTP::Server::Daemon do
-
   subject { Net::HTTP::Server::Daemon }
 
   describe "new" do
