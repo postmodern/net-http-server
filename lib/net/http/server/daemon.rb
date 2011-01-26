@@ -14,7 +14,7 @@ module Net
         include Responses
 
         # Default host to bind to.
-        DEFAULT_HOST = 'localhost'
+        DEFAULT_HOST = '0.0.0.0'
 
         # Default port to listen on.
         DEFAULT_PORT = 8080
@@ -57,7 +57,7 @@ module Net
         #
         def initialize(options={},&block)
           host = options.fetch(:host,DEFAULT_HOST)
-          port = options.fetch(:port,DEFAULT_PORT)
+          port = options.fetch(:port,DEFAULT_PORT).to_i
           max_connections = options.fetch(:max_connections,MAX_CONNECTIONS)
           log = options.fetch(:log,STDERR)
 
