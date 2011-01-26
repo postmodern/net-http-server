@@ -2,6 +2,7 @@
 
 * [Homepage](http://github.com/postmodern/net-http-server)
 * [Issues](http://github.com/postmodern/net-http-server/issues)
+* [Documentation](http://rubydoc.info/gems/net-http-server)
 * Postmodern (postmodern.mod3 at gmail.com)
 
 ## Description
