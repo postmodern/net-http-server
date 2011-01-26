@@ -1,4 +1,5 @@
-require 'net/http/server'
+require 'net/http/server/daemon'
+require 'net/http/server/version'
 
 require 'rack'
 require 'set'
@@ -64,12 +65,13 @@ module Rack
       # Starts {Net::HTTP::Server} and begins handling HTTP Requests.
       #
       def run
-        @server = Net::HTTP::Server.run(
+        @server = Net::HTTP::Server::Daemon.new(
           :host => @options[:Host],
-          :port => @options[:Port].to_i,
+          :port => @options[:Port],
           :handler => self
         )
 
+        @server.start
         @server.join
       end
 
