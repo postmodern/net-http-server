@@ -20,6 +20,10 @@ module Net
       # @option options [Integer] :max_connections (MAX_CONNECTIONS)
       #   The maximum number of simultaneous connections.
       #
+      # @option options [Boolean] :background (false)
+      #   Specifies whether to run the server in the background or
+      #   foreground.
+      #
       # @option options [#call] :handler
       #   The HTTP Request Handler object.
       #
@@ -36,6 +40,7 @@ module Net
         daemon = Daemon.new(options,&block)
 
         daemon.start
+        daemon.join unless options[:background]
         return daemon
       end
 
