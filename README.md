@@ -43,4 +43,6 @@ Use it with Rack:
 
 ## Copyright
 
+Copyright (c) 2011 Hal Brodigan
+
 See {file:LICENSE.txt} for details.
