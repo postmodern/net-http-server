@@ -22,9 +22,6 @@ module Net
         # Maximum number of simultaneous connections.
         MAX_CONNECTIONS = 256
 
-        CRLF = "\r\n"
-
-        #
         # Creates a new HTTP Daemon.
         #
         # @param [Hash] options
