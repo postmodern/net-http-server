@@ -10,7 +10,7 @@ describe Net::HTTP::Server::Responses do
 
   describe "write_status" do
     let(:status) { 200 }
-    let(:reason) { HTTP_STATUSES[status] }
+    let(:reason) { Net::HTTP::Server::Responses::HTTP_STATUSES[status] }
 
     before(:each) { write_status(@stream,status) }
 
@@ -47,7 +47,7 @@ describe Net::HTTP::Server::Responses do
     it "should terminate each header with a '\\r\\n'" do
       write_headers(@stream, 'Foo' => 'Bar', 'Baz' => 'Qix')
 
-      @stream.string.split("\r\n").should == [
+      @stream.string.split("\r\n").should =~ [
         'Foo: Bar',
         'Baz: Qix'
       ]
