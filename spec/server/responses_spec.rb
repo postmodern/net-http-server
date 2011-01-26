@@ -8,12 +8,6 @@ describe Net::HTTP::Server::Responses do
 
   before(:each) { @stream = StringIO.new }
 
-  it "should write a '\\r\\n' terminated line" do
-    write_line(@stream,"hello")
-
-    @stream.string.should == "hello\r\n"
-  end
-
   describe "write_status" do
     let(:status) { 200 }
     let(:reason) { HTTP_STATUSES[status] }
@@ -21,7 +15,9 @@ describe Net::HTTP::Server::Responses do
     before(:each) { write_status(@stream,status) }
 
     it "should write the HTTP Version" do
-      @stream.string.should =~ /HTTP\/1.1/
+      parts = @stream.string.split(' ')
+
+      parts[0].should =~ /HTTP\/1.1/
     end
 
     it "should write the Status Code" do
@@ -34,6 +30,10 @@ describe Net::HTTP::Server::Responses do
       parts = @stream.string.split(' ')
 
       parts[2].should == reason
+    end
+
+    it "should end the line with a '\\r\\n'" do
+      @stream.string[-2..-1].should == "\r\n"
     end
   end
 
