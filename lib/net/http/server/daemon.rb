@@ -102,7 +102,7 @@ module Net
         #   A new TCP connection.
         #
         def serve(socket)
-          if (request = read_request(socket))
+          if (raw_request = read_request(socket))
             parser = Parser.new
 
             begin
