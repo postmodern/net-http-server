@@ -5,6 +5,9 @@ module Net
     module Server
       module Requests
 
+        # Carriage Return (CR) followed by a Line Feed (LF).
+        CRLF = "\r\n"
+
         # Default ports for common URI schemes
         DEFAULT_PORTS = {
           'https' => 443,
@@ -12,6 +15,46 @@ module Net
         }
 
         protected
+
+        #
+        # Reads a HTTP Request from the stream.
+        #
+        # @param [IO] stream
+        #   The stream to read from.
+        #
+        # @return [String, nil]
+        #   The raw HTTP Request or `nil` if the Request was malformed.
+        #
+        def read_request(stream)
+          buffer = ''
+
+          request_line = stream.readline(CRLF)
+
+          # the request line must contain 'HTTP/'
+          return unless request_line.include?('HTTP/')
+
+          buffer << request_line
+
+          stream.each_line(CRLF) do |header|
+            buffer << header
+
+            # a header line must contain a ':' character followed by
+            # linear-white-space (either ' ' or "\t").
+            unless (header.include?(': ') || header.include?(":\t"))
+              # if this is not a header line, check if it is the end
+              # of the request
+              if header == CRLF
+                # end of the request
+                break
+              else
+                # invalid header line
+                return
+              end
+            end
+          end
+
+          return buffer
+        end
 
         #
         # Normalizes the `:uri` part of the request.

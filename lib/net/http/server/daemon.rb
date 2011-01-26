@@ -22,7 +22,6 @@ module Net
         # Maximum number of simultaneous connections.
         MAX_CONNECTIONS = 256
 
-        # Carriage Return (CR) followed by a Line Feed (LF).
         CRLF = "\r\n"
 
         #
@@ -96,69 +95,29 @@ module Net
           @handler = (object || block)
         end
 
-        def serve(socket)
-          buffer = ''
-
-          request_line = socket.readline
-
-          # the request line must contain 'HTTP/'
-          unless request_line.include?('HTTP/')
-            # invalid request line
-            return
-          end
-
-          buffer << request_line
-
-          socket.each_line do |header|
-            buffer << header
-
-            # a header line must contain a ':' character followed by
-            # linear-white-space (either ' ' or "\t").
-            unless (header.include?(': ') || header.include?(":\t"))
-              # if this is not a header line, check if it is the end
-              # of the request
-              if header == CRLF
-                # end of the request
-                break
-              else
-                # invalid header line
-                return
-              end
-            end
-          end
-
-          process_request(socket,buffer)
-        end
-
-        protected
-
         #
-        # Processes a request received from the socket.
+        # Receives HTTP Requests and handles them.
         #
         # @param [TCPSocket] socket
-        #   The socket that received the request.
+        #   A new TCP connection.
         #
-        # @param [String] raw_request
-        #   The received request.
-        #
-        # @return [Array<status, headers, body>]
-        #   The Rack compatible response.
-        #
-        def process_request(socket,raw_request)
-          parser = Parser.new
+        def serve(socket)
+          if (request = read_request(socket))
+            parser = Parser.new
 
-          begin
-            request = parser.parse(raw_request)
-          rescue Parslet::ParseFailed => error
-            return Responses::BAD_REQUEST
+            begin
+              request = parser.parse(raw_request)
+            rescue Parslet::ParseFailed => error
+              return Responses::BAD_REQUEST
+            end
+
+            normalize_request(request)
+
+            # rack compliant
+            status, headers, body = @handler.call(request,socket)
+
+            write_response(socket,status,headers,body)
           end
-
-          normalize_request(request)
-
-          # rack compliant
-          status, headers, body = @handler.call(request,socket)
-
-          write_response(socket,status,headers,body)
         end
 
       end
