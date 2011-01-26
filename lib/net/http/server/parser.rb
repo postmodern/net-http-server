@@ -16,32 +16,28 @@ module Net
         #
         # Character Classes
         #
-        rule(:digit) { match('[0-9]') }
+        rule(:digit) { match['0-9'] }
         rule(:digits) { digit.repeat(1) }
-        rule(:xdigit) { digit | match('[a-fA-F]') }
-        rule(:upper) { match('[A-Z]') }
-        rule(:lower) { match('[a-z]') }
+        rule(:xdigit) { digit | match['a-fA-F'] }
+        rule(:upper) { match['A-Z'] }
+        rule(:lower) { match['a-z'] }
         rule(:alpha) { upper | lower }
         rule(:alnum) { alpha | digit }
-        rule(:cntrl) { match('[\x00-\x1f]') }
-        rule(:ascii) { match('[\x00-\x7f]') }
+        rule(:cntrl) { match['\x00-\x1f'] }
+        rule(:ascii) { match['\x00-\x7f'] }
 
-        rule(:sp) { str(' ') }
-        rule(:lws) { sp | str("\t") }
+        rule(:lws) { match[" \t"] }
         rule(:crlf) { str("\r\n") }
 
         rule(:ctl) { cntrl | str("\x7f") }
         rule(:text) { lws | (ctl.absnt? >> ascii) }
-        rule(:safe) { str('$') | str('-') | str('_') | str('.') }
-        rule(:extra) {
-          str('!') | str('*') | str("'") | str('(') | str(')') | str(',')
-        }
-        rule(:reserved) {
-          str(';') | str('/') | str('?') | str(':') | str('@') | str('&') |
-          str('=') | str('+')
-        }
-        rule(:sorta_safe) { str('"') | str('<') | str('>') }
-        rule(:unsafe) { ctl | sp | str('#') | str('%') | sorta_safe }
+
+        rule(:safe) { charset('$', '-', '_', '.') }
+        rule(:extra) { charset('!', '*', "'", '(', ')', ',') }
+        rule(:reserved) { charset(';', '/', '?', ':', '@', '&', '=', '+') }
+        rule(:sorta_safe) { charset('"', '<', '>') }
+
+        rule(:unsafe) { ctl | charset(' ', '#', '%') | sorta_safe }
         rule(:national) {
           (alpha | digit | reserved | extra | safe | unsafe).absnt? >> any
         }
@@ -49,14 +45,12 @@ module Net
         rule(:unreserved) { alpha | digit | safe | extra | national }
         rule(:escape) { str("%u").maybe >> xdigit >> xdigit }
         rule(:uchar) { unreserved | escape | sorta_safe }
-        rule(:pchar) {
-          uchar | str(':') | str('@') | str('&') | str('=') | str('+')
-        }
+        rule(:pchar) { uchar | charset(':', '@', '&', '=', '+') }
         rule(:separators) {
-          str('(') | str(')') | str('<') | str('>') | str('@') | str(',') |
-          str(';') | str(':') | str("\\") | str('"') | str('/') | str('[') |
-          str(']') | str('?') | str('=') | str('{') | str('}') | sp |
-          str("\t")
+          lws | charset(
+            '(', ')', '<', '>', '@', ',', ';', ':', "\\", '"', '/', '[', ']',
+            '?', '=', '{', '}'
+          )
         }
 
         #
@@ -75,16 +69,15 @@ module Net
         # URI Elements
         #
         rule(:scheme) {
-          (alpha | digit | str('+') | str('-') | str('.')).repeat
+          (alpha | digit | charset('+', '-', '.')).repeat
         }
         rule(:host_name) {
-          (alnum | str('-') | str('_') | str('.')).repeat(1)
+          (alnum | charset('-', '_', '.')).repeat(1)
         }
         rule(:user_info) {
           (
-            unreserved | escape | str(';') | str(':') | str('&') | str('=') |
-            str('+')
-        ).repeat(1)
+            unreserved | escape | charset(';', ':', '&', '=', '+')
+          ).repeat(1)
         }
 
         rule(:path) { pchar.repeat(1) >> (str('/') >> pchar.repeat).repeat }
@@ -120,8 +113,8 @@ module Net
         rule(:http_version) { str('HTTP/') >> version_number.as(:version) }
         rule(:request_line) {
           request_method.as(:method) >>
-          sp >> request_uri.as(:uri) >>
-          sp >> http_version
+          str(' ') >> request_uri.as(:uri) >>
+          str(' ') >> http_version
         }
 
         rule(:header_name) { (str(':').absnt? >> token).repeat(1) }
@@ -139,6 +132,18 @@ module Net
         }
 
         root :request
+
+        protected
+
+        #
+        # Creates a matcher for the given characters.
+        #
+        # @param [Array<String>] chars
+        #   The characters to match.
+        #
+        def charset(*chars)
+          match[chars.map { |c| Regexp.escape(c) }.join]
+        end
 
       end
     end
