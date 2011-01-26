@@ -64,19 +64,6 @@ module Net
         protected
 
         #
-        # Writes a HTTP line to the stream.
-        #
-        # @param [IO] stream
-        #   The stream to write the line to.
-        #
-        # @param [String] line
-        #   The line of text.
-        #
-        def write_line(stream,line=nil)
-          stream.write("#{line}\r\n")
-        end
-
-        #
         # Writes the status of an HTTP Response to a stream.
         #
         # @param [IO] stream
@@ -89,7 +76,7 @@ module Net
           status = status.to_i
 
           reason = HTTP_STATUSES[status]
-          write_line stream, "HTTP/#{HTTP_VERSION} #{status} #{reason}"
+          stream.write("HTTP/#{HTTP_VERSION} #{status} #{reason}\r\n")
         end
 
         #
@@ -106,18 +93,18 @@ module Net
             case values
             when String
               values.each_line("\n") do |value|
-                write_line stream, "#{name}: #{value.chomp}"
+                stream.write("#{name}: #{value.chomp}\r\n")
               end
             when Time
-              write_line stream, "#{name}: #{values.httpdate}"
+              stream.write("#{name}: #{values.httpdate}\r\n")
             when Array
               values.each do |value|
-                write_line stream, "#{name}: #{value}"
+                stream.write("#{name}: #{value}\r\n")
               end
             end
           end
 
-          write_line stream
+          stream.write("\r\n")
           stream.flush
         end
 
