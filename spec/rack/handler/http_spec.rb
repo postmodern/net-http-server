@@ -9,9 +9,6 @@ require 'rack/static'
 describe Rack::Handler::HTTP do
   include TestRequest::Helpers
 
-  let(:host) { '0.0.0.0' }
-  let(:port) { 9204 }
-  
   before(:all) do
     app = Rack::Builder.app do
       use Rack::Lint
@@ -19,7 +16,9 @@ describe Rack::Handler::HTTP do
       run TestRequest.new
     end
     
-    @server = Rack::Handler::HTTP.new(app, :Host => host, :Port => port)
+    @host = '127.0.0.1'
+    @port = 9204
+    @server = Rack::Handler::HTTP.new(app, :Host => @host, :Port => @port)
 
     Thread.new { @server.run }
     Thread.pass until @server.running?
