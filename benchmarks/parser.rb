@@ -22,10 +22,10 @@ HTTP_REQUEST = [
 
 require 'benchmark'
 
-Benchmark.bmbm do |bench|
+Benchmark.bm do |bench|
   parser = Net::HTTP::Server::Parser.new
 
-  bench.report('parse: ') do
-    parser.parse(HTTP_REQUEST)
+  (1..10).times do |i|
+    bench.report("parse ##{i}: ") { parser.parse(HTTP_REQUEST) }
   end
 end
