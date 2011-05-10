@@ -36,6 +36,7 @@ Use it with Rack:
 ## Requirements
 
 * [parslet](http://rubygems.org/gems/parslet) ~> 1.0
+* [threaded_server](http://github.com/postmodern/threaded_server) ~> 0.1
 
 ## Install
 

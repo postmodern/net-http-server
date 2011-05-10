@@ -3,12 +3,12 @@ require 'net/http/server/requests'
 require 'net/http/server/responses'
 
 require 'net/protocol'
-require 'gserver'
+require 'threaded_server'
 
 module Net
   class HTTP < Protocol
     module Server
-      class Daemon < GServer
+      class Daemon < ThreadedServer
 
         include Requests
         include Responses
@@ -19,9 +19,7 @@ module Net
         # Default port to listen on.
         DEFAULT_PORT = 8080
 
-        # Maximum number of simultaneous connections.
-        MAX_CONNECTIONS = 256
-
+        #
         # Creates a new HTTP Daemon.
         #
         # @param [Hash] options
@@ -52,44 +50,19 @@ module Net
         #   The TCP socket of the client.
         #
         def initialize(options={},&block)
-          host = options.fetch(:host,DEFAULT_HOST)
-          port = options.fetch(:port,DEFAULT_PORT).to_i
-          max_connections = options.fetch(:max_connections,MAX_CONNECTIONS)
-          log = options.fetch(:log,STDERR)
+          @app = (options.delete(:app) || block)
 
-          super(port,host,max_connections,log,false,true)
+          host = (options.delete(:host) || DEFAULT_HOST)
+          port = (options.delete(:port) || DEFAULT_PORT)
 
-          handler(options[:handler],&block)
+          super(host,port,options) { |socket| serve(socket) }
         end
 
-        #
-        # Sets the HTTP Request Handler.
-        #
-        # @param [#call, nil] object
-        #   The HTTP Request Handler object.
-        #
-        # @yield [request, socket]
-        #   If a block is given, it will be used to process HTTP Requests.
-        #
-        # @yieldparam [Hash{Symbol => String,Array,Hash}] request
-        #   The HTTP Request.
-        #
-        # @yieldparam [TCPSocket] socket
-        #   The TCP socket of the client.
-        #
-        # @raise [ArgumentError]
-        #   The HTTP Request Handler must respond to `#call`.
-        #
-        def handler(object=nil,&block)
-          if object
-            unless object.respond_to?(:call)
-              raise(ArgumentError,"HTTP Request Handler must respond to #call")
-            end
-          elsif block.nil?
-            raise(ArgumentError,"no HTTP Request Handler block given")
-          end
+        def self.run(options={},&block)
+          daemon = new(options,&block)
+          daemon.listen
 
-          @handler = (object || block)
+          return daemon
         end
 
         #
@@ -111,7 +84,7 @@ module Net
             normalize_request(request)
 
             # rack compliant
-            status, headers, body = @handler.call(request,socket)
+            status, headers, body = @app.call(request,socket)
 
             write_response(socket,status,headers,body)
           end

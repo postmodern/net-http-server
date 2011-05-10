@@ -9,6 +9,7 @@ has_yard: true
 
 dependencies:
   parslet: ~> 1.0
+  threaded_server: ~> 0.1
 
 development_dependencies:
   ore-tasks: ~> 0.4

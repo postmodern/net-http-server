@@ -37,11 +37,7 @@ module Net
       #   The TCP socket of the client.
       #
       def Server.run(options={},&block)
-        daemon = Daemon.new(options,&block)
-
-        daemon.start
-        daemon.join unless options[:background]
-        return daemon
+        Daemon.run(options,&block)
       end
 
     end
