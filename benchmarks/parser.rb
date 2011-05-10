@@ -26,6 +26,6 @@ Benchmark.bmbm do |bench|
   parser = Net::HTTP::Server::Parser.new
 
   bench.report('parse: ') do
-    10.times { parser.parse(HTTP_REQUEST) }
+    parser.parse(HTTP_REQUEST)
   end
 end
