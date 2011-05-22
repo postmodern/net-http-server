@@ -27,7 +27,7 @@ module Rack
       # Special HTTP Headers used by Rack::Request
       SPECIAL_HEADERS = Set[
         'Content-Type',
-        'Content-Length',
+        'Content-Length'
       ]
 
       #
