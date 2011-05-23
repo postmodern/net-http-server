@@ -143,6 +143,13 @@ module Net
           write_status stream, status
           write_headers stream, headers
           write_body stream, body
+
+          # if no `Content-Length` or `Transfer-Encoding` was specified,
+          # close the stream after writing the response.
+          unless headers.has_key?('Content-Length') ||
+                 headers.has_key?('Transfer-Encoding')
+            stream.close
+          end
         end
 
       end
