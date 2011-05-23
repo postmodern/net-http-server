@@ -96,8 +96,8 @@ module Net
 
           unless headers.empty?
             headers.each do |header|
-              name = header[:name]
-              value = header[:value]
+              name = header[:name].to_s
+              value = header[:value].to_s
 
               if normalized_headers.has_key?(name)
                 previous_value = normalized_headers[name]
