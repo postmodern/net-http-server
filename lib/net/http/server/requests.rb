@@ -24,29 +24,33 @@ module Net
         def read_request(stream)
           buffer = ''
 
-          request_line = stream.readline("\r\n")
+          begin
+            request_line = stream.readline("\r\n")
 
-          # the request line must contain 'HTTP/'
-          return unless request_line.include?('HTTP/')
+            # the request line must contain 'HTTP/'
+            return unless request_line.include?('HTTP/')
 
-          buffer << request_line
+            buffer << request_line
 
-          stream.each_line("\r\n") do |header|
-            buffer << header
+            stream.each_line("\r\n") do |header|
+              buffer << header
 
-            # a header line must contain a ':' character followed by
-            # linear-white-space (either ' ' or "\t").
-            unless (header.include?(': ') || header.include?(":\t"))
-              # if this is not a header line, check if it is the end
-              # of the request
-              if header == "\r\n"
-                # end of the request
-                break
-              else
-                # invalid header line
-                return
+              # a header line must contain a ':' character followed by
+              # linear-white-space (either ' ' or "\t").
+              unless (header.include?(': ') || header.include?(":\t"))
+                # if this is not a header line, check if it is the end
+                # of the request
+                if header == "\r\n"
+                  # end of the request
+                  break
+                else
+                  # invalid header line
+                  return
+                end
               end
             end
+          rescue IOError, SystemCallError
+            return
           end
 
           return buffer
