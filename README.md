@@ -12,6 +12,8 @@
 ## Features
 
 * Pure Ruby.
+* Supports Streamed Request/Response Bodies.
+* Supports Chunked Transfer-Encoding.
 * Provides a [Rack](http://rack.rubyforge.org/) Handler.
 
 ## Examples
