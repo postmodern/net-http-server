@@ -23,6 +23,23 @@ module Net
         end
 
         #
+        # Reads a chunk from the stream.
+        #
+        # @return [String]
+        #   A chunk from the stream.
+        #
+        # @since 0.2.0
+        #
+        def read
+          length_line = @stream.readline("\r\n").chomp
+          length, extension = length_line.split(';',2)
+          length = length.to_i(16)
+
+          # read the chunk
+          return @stream.read(length) if length > 0
+        end
+
+        #
         # Reads each chunk from the stream.
         #
         # @yield [chunk]
@@ -39,19 +56,8 @@ module Net
         def each
           return enum_for unless block_given?
 
-          loop do
-            length_line = @stream.readline("\r\n").chomp
-            length, extension = length_line.split(';',2)
-            length = length.to_i(16)
-
-            # read the chunk
-            yield @stream.read(length)
-
-            # read the following CRLF
-            @stream.read(2)
-
-            # break when we receive the 0 chunk
-            break if length == 0
+          while (chunk = read)
+            yield chunk
           end
         end
 
