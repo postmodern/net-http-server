@@ -2,6 +2,7 @@ require 'net/http/server/daemon'
 require 'net/http/server/version'
 
 require 'rack'
+require 'rack/rewindable_input'
 require 'set'
 
 module Rack
@@ -81,16 +82,16 @@ module Rack
       # @param [Hash] request
       #   An HTTP Request received from {Net::HTTP::Server}.
       #
-      # @param [TCPSocket] socket
-      #   The socket that the request was received from.
+      # @param [Net::HTTP::Server::Stream, Net::HTTP::Server::ChunkedStream] stream
+      #   The stream that represents the body of the request.
       #
       # @return [Array<Integer, Hash, Array>]
       #   The response status, headers and body.
       #
-      def call(request,socket)
+      def call(request,stream)
         request_uri = request[:uri]
-        remote_address = socket.remote_address
-        local_address = socket.local_address
+        remote_address = stream.socket.remote_address
+        local_address = stream.socket.local_address
 
         env = {}
 
@@ -98,7 +99,7 @@ module Rack
         env.merge!(DEFAULT_ENV)
 
         # populate
-        env['rack.input'] = socket
+        env['rack.input'] = Rack::RewindableInput.new(stream)
 
         if request_uri[:scheme]
           env['rack.url_scheme'] = request_uri[:scheme]
