@@ -10,16 +10,19 @@ module Net
 
         include Enumerable
 
+        # The raw socket of the stream.
+        attr_reader :socket
+
         #
         # Creates a new stream.
         #
-        # @param [IO] stream
-        #   The raw stream that will be read/write to.
+        # @param [TCPSocket] socket
+        #   The raw socket that will be read/write to.
         #
         # @since 0.2.0
         #
-        def initialize(stream)
-          @stream = stream
+        def initialize(socket)
+          @socket = socket
         end
 
         #
@@ -37,7 +40,7 @@ module Net
         # @since 0.2.0
         #
         def read(length=4096,buffer=nil)
-          @stream.read(length,buffer)
+          @socket.read(length,buffer)
         end
 
         #
@@ -89,8 +92,8 @@ module Net
         # @since 0.2.0
         #
         def write(data)
-          @stream.write(data)
-          @stream.flush(data)
+          @socket.write(data)
+          @socket.flush(data)
         end
 
         #
