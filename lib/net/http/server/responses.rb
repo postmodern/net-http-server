@@ -141,11 +141,12 @@ module Net
             # write the chunk length
             stream.write("%X\r\n" % chunk.length)
             stream.write(chunk)
+            stream.write("\r\n")
             stream.flush
           end
 
           # last chunk
-          stream.write("0\r\n" % chunk.length)
+          stream.write("0\r\n\r\n")
           stream.flush
         end
 
