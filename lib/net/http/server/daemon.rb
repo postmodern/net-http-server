@@ -1,6 +1,8 @@
 require 'net/http/server/parser'
 require 'net/http/server/requests'
 require 'net/http/server/responses'
+require 'net/http/server/stream'
+require 'net/http/server/chunked_stream'
 
 require 'net/protocol'
 require 'gserver'
@@ -110,8 +112,14 @@ module Net
 
             normalize_request(request)
 
+            stream = if request[:headers]['Transfer-Encoding'] == 'chunked'
+                       ChunkedStream.new(socket)
+                     else
+                       Stream.new(socket)
+                     end
+
             # rack compliant
-            status, headers, body = @handler.call(request,socket)
+            status, headers, body = @handler.call(request,stream)
 
             write_response(socket,status,headers,body)
           end
