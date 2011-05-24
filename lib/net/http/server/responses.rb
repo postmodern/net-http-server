@@ -1,3 +1,5 @@
+require 'net/http/server/chunked_stream'
+
 require 'net/protocol'
 require 'time'
 
@@ -137,17 +139,11 @@ module Net
         # @since 0.2.0
         #
         def write_body_streamed(stream,body)
-          body.each do |chunk|
-            # write the chunk length
-            stream.write("%X\r\n" % chunk.length)
-            stream.write(chunk)
-            stream.write("\r\n")
-            stream.flush
-          end
+          chunked_stream = ChunkedStream.new(stream)
 
-          # last chunk
-          stream.write("0\r\n\r\n")
-          stream.flush
+          body.each { |chunk| chunked_stream.write(chunk) }
+
+          chunked_stream.close
         end
 
         #
