@@ -125,6 +125,31 @@ module Net
         end
 
         #
+        # Writes the body of a HTTP Response to a stream, using Chunked
+        # Transfer-Encoding.
+        #
+        # @param [IO] stream
+        #   The stream to write the headers back to.
+        #
+        # @param [#each] body
+        #   The body of the HTTP Response.
+        #
+        # @since 0.2.0
+        #
+        def write_body_streamed(stream,body)
+          body.each do |chunk|
+            # write the chunk length
+            stream.write("%X\r\n" % chunk.length)
+            stream.write(chunk)
+            stream.flush
+          end
+
+          # last chunk
+          stream.write("0\r\n" % chunk.length)
+          stream.flush
+        end
+
+        #
         # Writes a HTTP Response to a stream.
         #
         # @param [IO] stream
@@ -142,13 +167,15 @@ module Net
         def write_response(stream,status,headers,body)
           write_status stream, status
           write_headers stream, headers
-          write_body stream, body
 
-          # if no `Content-Length` or `Transfer-Encoding` was specified,
-          # close the stream after writing the response.
-          unless headers.has_key?('Content-Length') ||
-                 headers.has_key?('Transfer-Encoding')
-            stream.close
+          if headers['Transfer-Encoding'] == 'chunked'
+            write_body_streamed stream, body
+          else
+            write_body stream, body
+
+            # if neither `Content-Length` or `Transfer-Encoding`
+            # were specified, close the stream after writing the response.
+            stream.close unless headers['Content-Length']
           end
         end
 
