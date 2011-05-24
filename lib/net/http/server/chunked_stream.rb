@@ -56,6 +56,21 @@ module Net
         end
 
         #
+        # Reads the entire body.
+        #
+        # @return [String]
+        #   The complete body.
+        #
+        # @since 0.2.0
+        #
+        def body
+          buffer = ''
+
+          each { |chunk| buffer << chunk }
+          return buffer
+        end
+
+        #
         # Writes data to the chunked stream.
         #
         # @param [String] data
