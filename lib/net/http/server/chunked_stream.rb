@@ -11,18 +11,28 @@ module Net
         #
         # Reads a chunk from the stream.
         #
+        # @param [Integer] length
+        #
+        # @param [#<<] buffer
+        #   The optional buffer to append the data to.
+        #
         # @return [String, nil]
         #   A chunk from the stream.
         #
         # @since 0.2.0
         #
-        def read
+        def read(length=4096,buffer=nil)
           length_line = @stream.readline("\r\n").chomp
           length, extension = length_line.split(';',2)
           length = length.to_i(16)
 
           # read the chunk
-          return @stream.read(length) if length > 0
+          if length > 0
+            chunk = @stream.read(length)
+
+            buffer << chunk if buffer
+            return chunk
+          end
         end
 
         #

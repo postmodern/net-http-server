@@ -25,13 +25,19 @@ module Net
         #
         # Reads data from the stream.
         #
+        # @param [Integer] length
+        #   The number of bytes to read.
+        #
+        # @param [#<<] buffer
+        #   The optional buffer to append the data to.
+        #
         # @return [String, nil]
         #   A chunk from the stream.
         #
         # @since 0.2.0
         #
-        def read
-          @stream.read(4096)
+        def read(length=4096,buffer=nil)
+          @stream.read(length,buffer)
         end
 
         #
