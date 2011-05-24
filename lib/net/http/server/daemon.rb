@@ -70,14 +70,14 @@ module Net
         # @param [#call, nil] object
         #   The HTTP Request Handler object.
         #
-        # @yield [request, socket]
+        # @yield [request, stream]
         #   If a block is given, it will be used to process HTTP Requests.
         #
         # @yieldparam [Hash{Symbol => String,Array,Hash}] request
         #   The HTTP Request.
         #
-        # @yieldparam [TCPSocket] socket
-        #   The TCP socket of the client.
+        # @yieldparam [Stream, ChunkedStream] stream
+        #   The stream of the HTTP Request body.
         #
         # @raise [ArgumentError]
         #   The HTTP Request Handler must respond to `#call`.
