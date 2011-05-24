@@ -102,7 +102,7 @@ module Rack
         env['rack.input'] = Rack::RewindableInput.new(stream)
 
         if request_uri[:scheme]
-          env['rack.url_scheme'] = request_uri[:scheme]
+          env['rack.url_scheme'] = request_uri[:scheme].to_s
         end
 
         env['SERVER_NAME'] = local_address.getnameinfo[0]
@@ -112,8 +112,8 @@ module Rack
         env['REMOTE_ADDR'] = remote_address.ip_address
         env['REMOTE_PORT'] = remote_address.ip_port.to_s
 
-        env['REQUEST_METHOD'] = request[:method]
-        env['PATH_INFO'] = request_uri.fetch(:path,'*')
+        env['REQUEST_METHOD'] = request[:method].to_s
+        env['PATH_INFO'] = request_uri.fetch(:path,'*').to_s
         env['QUERY_STRING'] = request_uri[:query_string].to_s
 
         # add the headers
