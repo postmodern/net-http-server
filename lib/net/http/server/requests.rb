@@ -123,6 +123,9 @@ module Net
         #   The unnormalized HTTP request.
         #
         def normalize_request(request)
+          request[:method] = request[:method].to_s
+          request[:version] = request[:version].to_s
+
           normalize_uri(request)
           normalize_headers(request)
         end
