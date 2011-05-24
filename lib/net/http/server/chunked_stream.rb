@@ -1,3 +1,5 @@
+require 'net/http/server/stream'
+
 require 'net/protocol'
 
 module Net
