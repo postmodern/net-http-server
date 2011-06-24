@@ -15,7 +15,7 @@ module Rack
       # The default environment settings.
       DEFAULT_ENV = {
         'rack.version' => Rack::VERSION,
-        'rack.errors' => STDERR,
+        'rack.errors' => $stderr,
         'rack.multithread' => true,
         'rack.multiprocess' => false,
         'rack.run_once' => false,

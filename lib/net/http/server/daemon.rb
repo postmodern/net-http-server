@@ -38,7 +38,7 @@ module Net
         # @option options [Integer] :max_connections (MAX_CONNECTIONS)
         #   The maximum number of simultaneous connections.
         #
-        # @option options [IO] :log (STDERR)
+        # @option options [IO] :log ($stderr)
         #   The log to write errors to.
         #
         # @option options [#call] :handler
@@ -57,7 +57,7 @@ module Net
           host = options.fetch(:host,DEFAULT_HOST)
           port = options.fetch(:port,DEFAULT_PORT).to_i
           max_connections = options.fetch(:max_connections,MAX_CONNECTIONS)
-          log = options.fetch(:log,STDERR)
+          log = options.fetch(:log,$stderr)
 
           super(port,host,max_connections,log,false,true)
 
