@@ -93,7 +93,7 @@ module Net
         #
         def write(data)
           @socket.write(data)
-          @socket.flush(data)
+          @socket.flush
         end
 
         #
