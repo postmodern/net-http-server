@@ -92,8 +92,10 @@ module Net
         # @since 0.2.0
         #
         def write(data)
-          @socket.write(data)
+          result = @socket.write(data)
+
           @socket.flush
+          return result
         end
 
         #
