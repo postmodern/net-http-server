@@ -5,15 +5,14 @@ require 'stringio'
 
 describe Net::HTTP::Server::Stream do
   describe "#read" do
-    it "should read data from a socket" do
-      data = "foo\0bar"
+    let(:data) { "foo\0bar" }
 
+    it "should read data from a socket" do
       stream = described_class.new(StringIO.new(data))
       stream.read.should == data
     end
 
     it "should read an amount of data from a socket, directly into a buffer" do
-      data   = "foo\0bar"
       length = 3
       buffer = ''
 
