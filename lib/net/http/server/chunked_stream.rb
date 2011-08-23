@@ -23,17 +23,14 @@ module Net
         #
         # @since 0.2.0
         #
-        def read(length=4096,buffer=nil)
+        def read(length=4096,buffer='')
           length_line = @socket.readline("\r\n").chomp
           length, extension = length_line.split(';',2)
           length = length.to_i(16)
 
           # read the chunk
           if length > 0
-            chunk = @socket.read(length)
-
-            buffer << chunk if buffer
-            return chunk
+            @socket.read(length,buffer)
           end
         end
 

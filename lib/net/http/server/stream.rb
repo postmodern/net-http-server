@@ -39,8 +39,8 @@ module Net
         #
         # @since 0.2.0
         #
-        def read(length=4096,*buffer)
-          @socket.read(length,*buffer)
+        def read(length=4096,buffer='')
+          @socket.read(length,buffer)
         end
 
         #
