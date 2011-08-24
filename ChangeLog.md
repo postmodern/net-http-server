@@ -1,3 +1,13 @@
+### 0.2.0 / 2011-08-23
+
+* Added support for handling Streams and Chunked Transfer-Encoding:
+  * Added {Net::HTTP::Server::Stream}.
+  * Added {Net::HTTP::Server::ChunkedStream}.
+  * Added {Net::HTTP::Server::Responses#write_body_streamed}.
+* Use `Rack::RewindableInput` with {Net::HTTP::Server::Stream}.
+* Fixed a bug where Parslet Strings were being returned in the Headers.
+* Catch all IOErrors in {Net::HTTP::Server::Requests#read_request}.
+
 ### 0.1.0 / 2011-01-26
 
 * Initial release:
