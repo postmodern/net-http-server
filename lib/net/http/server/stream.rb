@@ -6,6 +6,8 @@ module Net
       #
       # Handles reading and writing to raw HTTP streams.
       #
+      # @since 0.2.0
+      #
       class Stream
 
         include Enumerable

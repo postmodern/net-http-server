@@ -9,6 +9,8 @@ module Net
       #
       # Handles reading and writing to Chunked Transfer-Encoded streams.
       #
+      # @since 0.2.0
+      #
       class ChunkedStream < Stream
 
         #
