@@ -77,7 +77,7 @@ module Net
             unless uri[:path]
               uri[:path] = '/'
             else
-              uri[:path].insert(0,'/')
+              uri[:path] = uri[:path].to_s.insert(0,'/')
             end
           elsif uri == '*'
             request[:uri] = {}
