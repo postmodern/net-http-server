@@ -26,26 +26,26 @@ describe Net::HTTP::Server::Parser do
     it "should not confuse the '/*' path with '*'" do
       request = subject.parse("OPTIONS /* HTTP/1.1\r\n\r\n")
 
-      request[:uri][:path].should == '*'
+      request[:uri][:path].should == '/*'
     end
 
     it "should parse absolute paths" do
       request = subject.parse("GET /absolute/path HTTP/1.1\r\n\r\n")
 
-      request[:uri][:path].should == 'absolute/path'
+      request[:uri][:path].should == '/absolute/path'
     end
 
     it "should parse the params in the path" do
       request = subject.parse("GET /path;q=1;p=2 HTTP/1.1\r\n\r\n")
 
-      request[:uri][:path].should == 'path'
+      request[:uri][:path].should == '/path'
       request[:uri][:params].should == 'q=1;p=2'
     end
 
     it "should parse the query-string in the path" do
       request = subject.parse("GET /path?q=1&p=2 HTTP/1.1\r\n\r\n")
 
-      request[:uri][:path].should == 'path'
+      request[:uri][:path].should == '/path'
       request[:uri][:query].should == 'q=1&p=2'
     end
 
@@ -55,7 +55,7 @@ describe Net::HTTP::Server::Parser do
       request[:uri][:scheme].should == 'http'
       request[:uri][:host].should == 'www.example.com'
       request[:uri][:port].should == '8080'
-      request[:uri][:path].should == 'path'
+      request[:uri][:path].should == '/path'
     end
 
     it "should parse non-http URIs" do
@@ -64,7 +64,7 @@ describe Net::HTTP::Server::Parser do
       request[:uri][:scheme].should == 'xmpp'
       request[:uri][:user_info].should == 'alice:secret'
       request[:uri][:host].should == 'example.com'
-      request[:uri][:path].should == 'path'
+      request[:uri][:path].should == '/path'
     end
 
     it "should parse the HTTP version" do
@@ -83,7 +83,7 @@ describe Net::HTTP::Server::Parser do
       request = subject.parse("GET / HTTP/1.1\r\n\r\n")
 
       request[:method].should == 'GET'
-      request[:uri][:path].should be_nil
+      request[:uri][:path].should == '/'
       request[:version].should == '1.1'
     end
   end

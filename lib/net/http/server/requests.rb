@@ -65,7 +65,8 @@ module Net
         def normalize_uri(request)
           uri = request[:uri]
 
-          if uri.kind_of?(Hash)
+          case uri
+          when Hash
             if uri[:scheme]
               uri[:port] = unless uri[:port]
                              DEFAULT_PORTS[uri[:scheme]]
@@ -73,13 +74,7 @@ module Net
                              uri[:port].to_i
                            end
             end
-
-            unless uri[:path]
-              uri[:path] = '/'
-            else
-              uri[:path].insert(0,'/')
-            end
-          elsif uri == '*'
+          when '*'
             request[:uri] = {}
           end
         end

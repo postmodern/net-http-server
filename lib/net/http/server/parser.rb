@@ -86,23 +86,22 @@ module Net
         rule(:params) { param >> (str(';') >> param).repeat }
         rule(:frag) { (uchar | reserved).repeat }
 
-        rule(:relative_path) {
-          path.maybe.as(:path) >>
+        rule(:uri_path) {
+          (str('/').maybe >> path.maybe).as(:path) >>
           (str(';') >> params.as(:params)).maybe >>
           (str('?') >> query_string.as(:query)).maybe >>
           (str('#') >> frag.as(:fragment)).maybe
         }
-        rule(:absolute_path) { str('/').repeat(1) >> relative_path }
 
-        rule(:absolute_uri) {
+        rule(:uri) {
           scheme.as(:scheme) >> str(':') >> str('//').maybe >>
           (user_info.as(:user_info) >> str('@')).maybe >>
           host_name.as(:host) >>
           (str(':') >> digits.as(:port)).maybe >>
-          absolute_path
+          uri_path
         }
 
-        rule(:request_uri) { str('*') | absolute_uri | absolute_path }
+        rule(:request_uri) { str('*') | uri | uri_path }
 
         #
         # HTTP Elements
@@ -112,9 +111,9 @@ module Net
         rule(:version_number) { digits >> str('.') >> digits }
         rule(:http_version) { str('HTTP/') >> version_number.as(:version) }
         rule(:request_line) {
-          request_method.as(:method) >>
-          str(' ') >> request_uri.as(:uri) >>
-          str(' ') >> http_version
+          request_method.as(:method) >> str(' ') >>
+          request_uri.as(:uri) >> str(' ') >>
+          http_version
         }
 
         rule(:header_name) { (str(':').absnt? >> token).repeat(1) }

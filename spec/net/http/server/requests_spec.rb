@@ -52,20 +52,6 @@ describe Net::HTTP::Server::Requests do
       request[:uri][:port].should == 80
     end
 
-    it "should default :path to '/'" do
-      request = {:uri => {:path => nil}}
-      normalize_uri(request)
-
-      request[:uri][:path].should == '/'
-    end
-
-    it "should ensure that the path begins with a '/'" do
-      request = {:uri => {:path => 'foo'}}
-      normalize_uri(request)
-
-      request[:uri][:path].should == '/foo'
-    end
-
     it "should replace a '*' URI with an empty Hash" do
       request = {:uri => '*'}
       normalize_uri(request)
