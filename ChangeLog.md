@@ -2,6 +2,8 @@
 
 * Adjusted {Net::HTTP::Server::Parser} to include the leading `/` in the
   `:path`.
+* Use `String#replace` to clear the buffer passed to
+  {Net::HTTP::Server::ChunkedStream#read}.
 
 ### 0.2.0 / 2011-08-23
 
