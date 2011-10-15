@@ -1,3 +1,8 @@
+### 0.2.1 / 2011-10-14
+
+* Adjusted {Net::HTTP::Server::Parser} to include the leading `/` in the
+  `:path`.
+
 ### 0.2.0 / 2011-08-23
 
 * Added support for handling Streams and Chunked Transfer-Encoding:
