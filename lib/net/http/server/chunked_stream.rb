@@ -62,7 +62,7 @@ module Net
           end
 
           # clear the buffer before appending
-          buffer.clear
+          buffer.replace('')
 
           unless @buffer.empty?
             # empty a slice of the buffer
