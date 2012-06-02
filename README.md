@@ -37,7 +37,7 @@ Use it with Rack:
 
 Using it with `rackup`:
 
-    $ rackup -r net/http
+    $ rackup -s HTTP
 
 ## Requirements
 
