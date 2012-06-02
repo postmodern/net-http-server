@@ -35,6 +35,10 @@ Use it with Rack:
     
     Rack::Handler::HTTP.run app
 
+Using it with `rackup`:
+
+    $ rackup -r net/http
+
 ## Requirements
 
 * [parslet](http://rubygems.org/gems/parslet) ~> 1.0
