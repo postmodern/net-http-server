@@ -7,7 +7,7 @@ module Net
         # Default ports for common URI schemes
         DEFAULT_PORTS = {
           'https' => 443,
-          'http' => 80
+          'http'  => 80
         }
 
         protected
@@ -91,7 +91,7 @@ module Net
 
           unless headers.empty?
             headers.each do |header|
-              name = header[:name].to_s
+              name  = header[:name].to_s
               value = header[:value].to_s
 
               if normalized_headers.has_key?(name)

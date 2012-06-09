@@ -47,10 +47,9 @@ module Rack
       #   The port to listen on.
       #
       def initialize(app,options={})
-        @app = app
+        @app     = app
         @options = options
-
-        @server = nil
+        @server  = nil
       end
 
       #
@@ -67,8 +66,8 @@ module Rack
       #
       def run
         @server = Net::HTTP::Server::Daemon.new(
-          :host => @options[:Host],
-          :port => @options[:Port],
+          :host    => @options[:Host],
+          :port    => @options[:Port],
           :handler => self
         )
 
@@ -89,9 +88,9 @@ module Rack
       #   The response status, headers and body.
       #
       def call(request,stream)
-        request_uri = request[:uri]
+        request_uri    = request[:uri]
         remote_address = stream.socket.remote_address
-        local_address = stream.socket.local_address
+        local_address  = stream.socket.local_address
 
         env = {}
 
@@ -105,16 +104,16 @@ module Rack
           env['rack.url_scheme'] = request_uri[:scheme].to_s
         end
 
-        env['SERVER_NAME'] = local_address.getnameinfo[0]
-        env['SERVER_PORT'] = local_address.ip_port.to_s
+        env['SERVER_NAME']     = local_address.getnameinfo[0]
+        env['SERVER_PORT']     = local_address.ip_port.to_s
         env['SERVER_PROTOCOL'] = "HTTP/#{request[:http_version]}"
 
         env['REMOTE_ADDR'] = remote_address.ip_address
         env['REMOTE_PORT'] = remote_address.ip_port.to_s
 
         env['REQUEST_METHOD'] = request[:method].to_s
-        env['PATH_INFO'] = request_uri.fetch(:path,'*').to_s
-        env['QUERY_STRING'] = request_uri[:query_string].to_s
+        env['PATH_INFO']      = request_uri.fetch(:path,'*').to_s
+        env['QUERY_STRING']   = request_uri[:query_string].to_s
 
         # add the headers
         request[:headers].each do |name,value|
