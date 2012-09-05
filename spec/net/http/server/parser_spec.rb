@@ -49,6 +49,13 @@ describe Net::HTTP::Server::Parser do
       request[:uri][:query].should == 'q=1&p=2'
     end
 
+    it "should parse URL encoded query strings in the path" do
+      request = subject.parse("GET /path?q=%3D1&p=2 HTTP/1.1\r\n\r\n")
+
+      request[:uri][:path].should == '/path'
+      request[:uri][:query].should == 'q=%3D1&p=2'
+    end
+
     it "should parse absolute URIs paths" do
       request = subject.parse("GET http://www.example.com:8080/path HTTP/1.1\r\n\r\n")
 
