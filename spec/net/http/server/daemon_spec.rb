@@ -2,24 +2,22 @@ require 'spec_helper'
 require 'net/http/server/daemon'
 
 describe Net::HTTP::Server::Daemon do
-  subject { Net::HTTP::Server::Daemon }
+  subject { described_class }
 
-  describe "new" do
+  describe "#initialize" do
+    subject { described_class.new { |request,response| } }
+
     it "should have a default host" do
-      daemon = subject.new { |request,socket| }
-
-      daemon.host.should_not be_nil
+      subject.host.should_not be_nil
     end
 
     it "should have a default port" do
-      daemon = subject.new { |request,socket| }
-
-      daemon.port.should_not be_nil
+      subject.port.should_not be_nil
     end
 
     it "should require a HTTP Request handler" do
       lambda {
-        subject.new
+        described_class.new
       }.should raise_error
     end
   end
