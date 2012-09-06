@@ -43,7 +43,7 @@ module Net
         }
 
         rule(:unreserved) { alpha | digit | safe | extra | national }
-        rule(:escape) { str("%u").maybe >> xdigit >> xdigit }
+        rule(:escape) { str("%").maybe >> xdigit >> xdigit }
         rule(:uchar) { unreserved | escape | sorta_safe }
         rule(:pchar) { uchar | charset(':', '@', '&', '=', '+') }
         rule(:separators) {
