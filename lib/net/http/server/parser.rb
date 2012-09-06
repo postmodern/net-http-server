@@ -43,8 +43,9 @@ module Net
         }
 
         rule(:unreserved) { alpha | digit | safe | extra | national }
-        rule(:escape) { str("%u").maybe >> xdigit >> xdigit }
-        rule(:uchar) { unreserved | escape | sorta_safe }
+        rule(:uescape) { str("%u") >> xdigit >> xdigit >> xdigit >> xdigit }
+        rule(:escape) { str("%") >> xdigit >> xdigit }
+        rule(:uchar) { unreserved | uescape | escape | sorta_safe }
         rule(:pchar) { uchar | charset(':', '@', '&', '=', '+') }
         rule(:separators) {
           lws | charset(
