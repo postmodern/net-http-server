@@ -44,6 +44,9 @@ module Net
         # @option options [#call] :handler
         #   The HTTP Request Handler object.
         #
+        # @option options [Function()] :success_opener
+        #   If the server is successfully opened, this method will be called
+        #
         # @yield [request, socket]
         #   If a block is given, it will be used to process HTTP Requests.
         #
@@ -62,6 +65,12 @@ module Net
           super(port,host,max_connections,log,false,true)
 
           handler(options[:handler],&block)
+          @success_open_callback = options.fetch(:success_opener, lambda {} )
+        end
+
+        def start()
+            super
+            @success_open_callback.call
         end
 
         #
