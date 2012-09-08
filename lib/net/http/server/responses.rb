@@ -87,7 +87,7 @@ module Net
         # @param [IO] stream
         #   The stream to write the headers back to.
         #
-        # @param [Hash{String => [String, Time, Array<String>}] headers
+        # @param [Hash{String => String,Time,Array<String>}] headers
         #   The headers of the HTTP Response.
         #
         def write_headers(stream,headers)
@@ -155,7 +155,7 @@ module Net
         # @param [Integer] status
         #   The status of the HTTP Response.
         #
-        # @param [Hash{String => [String, Time, Array<String>}] headers
+        # @param [Hash{String => String,Time,Array<String>}] headers
         #   The headers of the HTTP Response.
         #
         # @param [#each] body
