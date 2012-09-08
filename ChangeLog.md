@@ -1,3 +1,12 @@
+### 0.2.2 / 2012-09-08
+
+* Added an example `rackup` command.
+
+#### Parser
+
+* Fixed the rule for escaped unicode characters (`%uXXXX`).
+* Added a rule for escaped characters (`%XX`).
+
 ### 0.2.1 / 2011-10-14
 
 * Adjusted {Net::HTTP::Server::Parser} to include the leading `/` in the
