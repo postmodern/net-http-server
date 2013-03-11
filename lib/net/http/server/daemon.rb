@@ -106,7 +106,7 @@ module Net
 
             begin
               request = parser.parse(raw_request)
-            rescue Parslet::ParseFailed => error
+            rescue Parslet::ParseFailed
               return Responses::BAD_REQUEST
             end
 
