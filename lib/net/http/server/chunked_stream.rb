@@ -47,9 +47,8 @@ module Net
           end
 
           until @buffer.length >= length
-            length_line = @socket.readline("\r\n").chomp
-            chunk_length, chunk_extension = length_line.split(';',2)
-            chunk_length = chunk_length.to_i(16)
+            length_line  = @socket.readline("\r\n").chomp
+            chunk_length = length_line.split(';',2).first.to_i(16)
 
             # read the chunk
             @buffer << @socket.read(chunk_length)
