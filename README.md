@@ -42,6 +42,7 @@ Using it with `rackup`:
 ## Requirements
 
 * [parslet](http://rubygems.org/gems/parslet) ~> 1.0
+* [gserver](https://rubygems.org/gems/gserver) ~> 0.0
 
 ## Install
 
