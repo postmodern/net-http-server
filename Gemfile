@@ -10,3 +10,7 @@ group :development do
   gem 'kramdown'
   gem 'yard', '~> 0.8'
 end
+
+group :test do
+  gem 'rack'
+end
