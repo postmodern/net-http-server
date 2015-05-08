@@ -12,7 +12,8 @@ describe Rack::Handler::HTTP do
   before(:all) do
     app = Rack::Builder.app do
       use Rack::Lint
-      use Rack::Static, :urls => ["/spec/images"]
+      use Rack::Static, :urls => ["/images"],
+                        :root => TestRequest::Helpers::ROOT
       run TestRequest.new
     end
     
@@ -78,7 +79,7 @@ describe Rack::Handler::HTTP do
   
   it "should serve images" do
     file_size = File.size(File.join(File.dirname(__FILE__), 'images', 'image.jpg'))
-    GET("/spec/images/image.jpg")
+    GET("/images/image.jpg")
     status.should == 200
     response.content_length.should == file_size
     response.body.size.should == file_size
