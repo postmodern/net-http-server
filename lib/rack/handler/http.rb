@@ -113,12 +113,12 @@ module Rack
 
         env['REQUEST_METHOD'] = request[:method].to_s
         env['PATH_INFO']      = request_uri.fetch(:path,'*').to_s
-        env['QUERY_STRING']   = request_uri[:query_string].to_s
+        env['QUERY_STRING']   = request_uri[:query].to_s
 
         # add the headers
         request[:headers].each do |name,value|
           key = name.dup
-          
+
           key.upcase!
           key.tr!('-','_')
 
