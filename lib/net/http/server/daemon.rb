@@ -26,22 +26,19 @@ module Net
 
         # Creates a new HTTP Daemon.
         #
-        # @param [Hash] options
-        #   Options for the daemon.
-        #
-        # @option options [String] :host (DEFAULT_HOST)
+        # @param [String] host
         #   The host to run on.
         #
-        # @option options [String] :port (DEFAULT_PORT)
+        # @param [String] port
         #   The port to listen on.
         #
-        # @option options [Integer] :max_connections (MAX_CONNECTIONS)
+        # @param [Integer] max_connections
         #   The maximum number of simultaneous connections.
         #
-        # @option options [IO] :log ($stderr)
+        # @param [IO] log
         #   The log to write errors to.
         #
-        # @option options [#call] :handler
+        # @param [#call] handler
         #   The HTTP Request Handler object.
         #
         # @yield [request, socket]
@@ -53,15 +50,18 @@ module Net
         # @yieldparam [TCPSocket] socket
         #   The TCP socket of the client.
         #
-        def initialize(options={},&block)
-          host = options.fetch(:host,DEFAULT_HOST)
-          port = options.fetch(:port,DEFAULT_PORT).to_i
-          max_connections = options.fetch(:max_connections,MAX_CONNECTIONS)
-          log = options.fetch(:log,$stderr)
+        # @raise [ArgumentError]
+        #   No `handler:` value was given.
+        #
+        def initialize(host: DEFAULT_HOST,
+                       port: DEFAULT_PORT,
+                       max_connections: MAX_CONNECTIONS,
+                       log: $stderr,
+                       handler: nil,
+                       &block)
+          super(port.to_i,host,max_connections,log,false,true)
 
-          super(port,host,max_connections,log,false,true)
-
-          handler(options[:handler],&block)
+          handler(handler,&block)
         end
 
         #

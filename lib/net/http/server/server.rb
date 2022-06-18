@@ -8,23 +8,23 @@ module Net
       #
       # Starts the HTTP Server.
       #
-      # @param [Hash] options
-      #   Options for the server.
-      #
-      # @option options [String] :host (DEFAULT_HOST)
-      #   The host to run on.
-      #
-      # @option options [String] :port (DEFAULT_PORT)
-      #   The port to listen on.
-      #
-      # @option options [Integer] :max_connections (MAX_CONNECTIONS)
-      #   The maximum number of simultaneous connections.
-      #
-      # @option options [Boolean] :background (false)
+      # @param [Boolean] background
       #   Specifies whether to run the server in the background or
       #   foreground.
       #
-      # @option options [#call] :handler
+      # @param [Hash{Symbol => Object}] kwargs
+      #   Additional keyword arguments for {Daemon#initialize}.
+      #
+      # @option kwargs [String] :host (DEFAULT_HOST)
+      #   The host to run on.
+      #
+      # @option kwargs [String] :port (DEFAULT_PORT)
+      #   The port to listen on.
+      #
+      # @option kwargs [Integer] :max_connections (MAX_CONNECTIONS)
+      #   The maximum number of simultaneous connections.
+      #
+      # @option kwargs [#call] :handler
       #   The HTTP Request Handler object.
       #
       # @yield [request, socket]
@@ -36,11 +36,14 @@ module Net
       # @yieldparam [TCPSocket] socket
       #   The TCP socket of the client.
       #
-      def Server.run(options={},&block)
-        daemon = Daemon.new(options,&block)
+      # @raise [ArgumentError]
+      #   No `handler:` value was given.
+      #
+      def Server.run(background: false, **kwargs,&block)
+        daemon = Daemon.new(**kwargs,&block)
 
         daemon.start
-        daemon.join unless options[:background]
+        daemon.join unless background
         return daemon
       end
 

@@ -37,7 +37,7 @@ module Rack
       # @param [#call] app
       #   The application the handler will be passing requests to.
       #
-      # @param [Hash] options
+      # @param [Hash{Symbol => Object}] options
       #   Additional options.
       #
       # @option options [String] :Host
@@ -46,7 +46,7 @@ module Rack
       # @option options [Integer] :Port
       #   The port to listen on.
       #
-      def initialize(app,options={})
+      def initialize(app,**options)
         @app     = app
         @options = options
         @server  = nil
@@ -57,8 +57,8 @@ module Rack
       #
       # @see #initialize
       #
-      def self.run(app,options={})
-        new(app,options).run
+      def self.run(app,**options)
+        new(app,**options).run
       end
 
       #
@@ -66,9 +66,9 @@ module Rack
       #
       def run
         @server = Net::HTTP::Server::Daemon.new(
-          :host    => @options[:Host],
-          :port    => @options[:Port],
-          :handler => self
+          host:    @options[:Host],
+          port:    @options[:Port],
+          handler: self
         )
 
         @server.start
