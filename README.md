@@ -19,24 +19,30 @@
 
 Simple HTTP Server:
 
-    require 'net/http/server'
-    require 'pp'
+```ruby
+require 'net/http/server'
+require 'pp'
 
-    Net::HTTP::Server.run(:port => 8080) do |request,stream|
-      pp request
+Net::HTTP::Server.run(:port => 8080) do |request,stream|
+  pp request
 
-      [200, {'Content-Type' => 'text/html'}, ['Hello World']]
-    end
+  [200, {'Content-Type' => 'text/html'}, ['Hello World']]
+end
+```
 
 Use it with Rack:
 
-    require 'rack/handler/http'
-    
-    Rack::Handler::HTTP.run app
+```ruby
+require 'rack/handler/http'
+
+Rack::Handler::HTTP.run app
+```
 
 Using it with `rackup`:
 
-    $ rackup -s HTTP
+```shell
+$ rackup -s HTTP
+```
 
 ## Requirements
 
@@ -45,7 +51,9 @@ Using it with `rackup`:
 
 ## Install
 
-    $ gem install net-http-server
+```shell
+$ gem install net-http-server
+```
 
 ## Copyright
 

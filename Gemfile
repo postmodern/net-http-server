@@ -8,6 +8,7 @@ group :development do
   gem 'rspec', '~> 2.4'
 
   gem 'kramdown'
+  gem 'redcarpet', platform: :mri
   gem 'yard', '~> 0.9'
 end
 
