@@ -1,6 +1,3 @@
-require 'rubygems'
-require 'rake'
-
 begin
   require 'bundler/setup'
 rescue LoadError => e
