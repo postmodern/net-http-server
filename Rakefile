@@ -19,4 +19,4 @@ task :test    => :spec
 task :default => :spec
 
 require 'yard'
-YARD::Rake::YardocTask.new  
+YARD::Rake::YardocTask.new
