@@ -4,7 +4,7 @@ description: A Rack compatible pure Ruby HTTP Server.
 license: MIT
 authors: Postmodern
 email: postmodern.mod3@gmail.com
-homepage: https://github.com/postmodern/net-http-server
+homepage: https://github.com/postmodern/net-http-server#readme
 has_yard: true
 
 metadata:
