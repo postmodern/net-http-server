@@ -14,7 +14,7 @@ module Net
       class ChunkedStream < Stream
 
         #
-        # Initializes the chuked stream.
+        # Initializes the chunked stream.
         #
         # @param [#read, #write, #flush] socket
         #   The socket to read from and write to.
