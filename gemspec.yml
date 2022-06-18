@@ -7,6 +7,13 @@ email: postmodern.mod3@gmail.com
 homepage: https://github.com/postmodern/net-http-server
 has_yard: true
 
+metadata:
+  documentation_uri: https://rubydoc.info/gems/net-http-server
+  source_code_uri:   https://github.com/postmodern/net-http-server.rb
+  bug_tracker_uri:   https://github.com/postmodern/net-http-server.rb/issues
+  changelog_uri:     https://github.com/postmodern/net-http-server.rb/blob/master/ChangeLog.md
+  rubygems_mfa_required: 'true'
+
 dependencies:
   parslet: ~> 1.0
   gserver: ~> 0.0
