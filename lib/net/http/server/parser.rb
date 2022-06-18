@@ -30,7 +30,7 @@ module Net
         rule(:crlf) { str("\r\n") }
 
         rule(:ctl) { cntrl | str("\x7f") }
-        rule(:text) { lws | (ctl.absnt? >> ascii) }
+        rule(:text) { lws | (ctl.absent? >> ascii) }
 
         rule(:safe) { charset('$', '-', '_', '.') }
         rule(:extra) { charset('!', '*', "'", '(', ')', ',') }
@@ -39,7 +39,7 @@ module Net
 
         rule(:unsafe) { ctl | charset(' ', '#', '%') | sorta_safe }
         rule(:national) {
-          (alpha | digit | reserved | extra | safe | unsafe).absnt? >> any
+          (alpha | digit | reserved | extra | safe | unsafe).absent? >> any
         }
 
         rule(:unreserved) { alpha | digit | safe | extra | national }
@@ -57,13 +57,13 @@ module Net
         #
         # Elements
         #
-        rule(:token) { (ctl | separators).absnt? >> ascii }
+        rule(:token) { (ctl | separators).absent? >> ascii }
 
-        rule(:comment_text) { (str('(') | str(')')).absnt? >> text }
+        rule(:comment_text) { (str('(') | str(')')).absent? >> text }
         rule(:comment) { str('(') >> comment_text.repeat >> str(')') }
 
         rule(:quoted_pair) { str("\\") >> ascii }
-        rule(:quoted_text) { quoted_pair | str('"').absnt? >> text }
+        rule(:quoted_text) { quoted_pair | str('"').absent? >> text }
         rule(:quoted_string) { str('"') >> quoted_text >> str('"') }
 
         #
@@ -117,7 +117,7 @@ module Net
           http_version
         }
 
-        rule(:header_name) { (str(':').absnt? >> token).repeat(1) }
+        rule(:header_name) { (str(':').absent? >> token).repeat(1) }
         rule(:header_value) {
           (text | token | separators | quoted_string).repeat(1)
         }
