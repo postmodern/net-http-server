@@ -1,3 +1,11 @@
+### 0.2.3 / 2022-06-18
+
+* Add [gserver] ~> 0.0 as a dependency.
+* Fix a bug in {Rack::Handler::HTTP} where the URI `query` string was not being
+  properly loaded.
+* Fixed a bug in {Net::HTTP::Parser} where the older `absnt?` method was being
+  used instead of the newer `absent?` method.
+
 ### 0.2.2 / 2012-09-08
 
 * Added an example `rackup` command.
@@ -32,3 +40,5 @@
   * Added {Net::HTTP::Server::Responses}.
   * Added {Net::HTTP::Server::Daemon}.
   * Added {Rack::Handler::HTTP}.
+
+[gserver]: https://rubygems.org/gems/gserver
