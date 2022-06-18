@@ -9,7 +9,7 @@ describe Net::HTTP::Server::Stream do
 
     it "should read data from a socket" do
       stream = described_class.new(StringIO.new(data))
-      stream.read.should == data
+      expect(stream.read).to eq(data)
     end
 
     it "should read an amount of data from a socket, directly into a buffer" do
@@ -19,7 +19,7 @@ describe Net::HTTP::Server::Stream do
       stream = described_class.new(StringIO.new(data))
       stream.read(length,buffer)
       
-      buffer.should == data[0,length]
+      expect(buffer).to eq(data[0,length])
     end
   end
 
@@ -30,7 +30,7 @@ describe Net::HTTP::Server::Stream do
       stream = described_class.new(StringIO.new())
       stream.each { |chunk| results << chunk }
 
-      results.should be_empty
+      expect(results).to be_empty
     end
 
     it "should yield each chunk in the stream" do
@@ -41,7 +41,7 @@ describe Net::HTTP::Server::Stream do
       stream = described_class.new(StringIO.new(data))
       stream.each { |chunk| results << chunk }
 
-      results.should == chunks
+      expect(results).to eq(chunks)
     end
   end
 
@@ -51,7 +51,7 @@ describe Net::HTTP::Server::Stream do
       data = chunks.join('')
 
       stream = described_class.new(StringIO.new(data))
-      stream.body.should == data
+      expect(stream.body).to eq(data)
     end
   end
 
@@ -60,7 +60,7 @@ describe Net::HTTP::Server::Stream do
       data = "foo\n\rbar"
 
       stream = described_class.new(StringIO.new)
-      stream.write(data).should == data.length
+      expect(stream.write(data)).to eq(data.length)
     end
   end
 end

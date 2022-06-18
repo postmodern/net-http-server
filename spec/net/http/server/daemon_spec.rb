@@ -8,17 +8,17 @@ describe Net::HTTP::Server::Daemon do
     subject { described_class.new { |request,response| } }
 
     it "should have a default host" do
-      subject.host.should_not be_nil
+      expect(subject.host).not_to be_nil
     end
 
     it "should have a default port" do
-      subject.port.should_not be_nil
+      expect(subject.port).not_to be_nil
     end
 
     it "should require a HTTP Request handler" do
-      lambda {
+      expect {
         described_class.new
-      }.should raise_error
+      }.to raise_error
     end
   end
 end

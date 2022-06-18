@@ -10,20 +10,20 @@ describe Net::HTTP::Server::Requests do
     it "should ignore requests that do not contain an HTTP version" do
       stream = StringIO.new("GET /\r\n")
 
-      read_request(stream).should be_nil
+      expect(read_request(stream)).to be_nil
     end
 
     it "should ignore requests with malformed headers" do
       stream = StringIO.new("GET / HTTP/1.1\r\nFoo: Bar\r\nBAZ\r\n\r\n")
 
-      read_request(stream).should be_nil
+      expect(read_request(stream)).to be_nil
     end
 
     it "should read requests with an HTTP Version and Headers" do
       request = "GET / HTTP/1.1\r\nFoo: Bar\r\n\r\n"
       stream = StringIO.new(request)
 
-      read_request(stream).should == request
+      expect(read_request(stream)).to eq(request)
     end
 
     it "should not read the body of the request" do
@@ -33,7 +33,7 @@ describe Net::HTTP::Server::Requests do
 
       read_request(stream)
 
-      stream.read.should == body
+      expect(stream.read).to eq(body)
     end
   end
 
@@ -42,21 +42,21 @@ describe Net::HTTP::Server::Requests do
       request = {:uri => {:scheme => 'https'}}
       normalize_uri(request)
 
-      request[:uri][:port].should == 443
+      expect(request[:uri][:port]).to eq(443)
     end
 
     it "should convert :port to an Integer" do
       request = {:uri => {:scheme => 'http', :port => '80'}}
       normalize_uri(request)
 
-      request[:uri][:port].should == 80
+      expect(request[:uri][:port]).to eq(80)
     end
 
     it "should replace a '*' URI with an empty Hash" do
       request = {:uri => '*'}
       normalize_uri(request)
 
-      request[:uri].should == {}
+      expect(request[:uri]).to eq({})
     end
   end
 
@@ -65,7 +65,7 @@ describe Net::HTTP::Server::Requests do
       request = {:headers => []}
       normalize_headers(request)
 
-      request[:headers].should == {}
+      expect(request[:headers]).to eq({})
     end
 
     it "should convert header names and values into a Hash" do
@@ -75,10 +75,10 @@ describe Net::HTTP::Server::Requests do
       ]}
       normalize_headers(request)
 
-      request[:headers].should == {
+      expect(request[:headers]).to eq({
         'Content-Type' => 'text/html',
         'Content-Length' => '5'
-      }
+      })
     end
 
     it "should group duplicate header names into the same Hash key" do
@@ -88,9 +88,9 @@ describe Net::HTTP::Server::Requests do
       ]}
       normalize_headers(request)
 
-      request[:headers].should == {
+      expect(request[:headers]).to eq({
         'Content-Type' => ['text/html', 'UTF8']
-      }
+      })
     end
   end
 end
