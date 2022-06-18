@@ -1,8 +1,8 @@
 # net-http-server
 
-* [Homepage](http://github.com/postmodern/net-http-server)
-* [Issues](http://github.com/postmodern/net-http-server/issues)
-* [Documentation](http://rubydoc.info/gems/net-http-server)
+* [Homepage](https://github.com/postmodern/net-http-server#readme)
+* [Issues](https://github.com/postmodern/net-http-server/issues)
+* [Documentation](https://rubydoc.info/gems/net-http-server)
 
 ## Description
 
@@ -13,7 +13,7 @@
 * Pure Ruby.
 * Supports Streamed Request/Response Bodies.
 * Supports Chunked Transfer-Encoding.
-* Provides a [Rack](http://rack.rubyforge.org/) Handler.
+* Provides a [Rack](https://github.com/rack/rack#readme) Handler.
 
 ## Examples
 
@@ -46,7 +46,7 @@ $ rackup -s HTTP
 
 ## Requirements
 
-* [parslet](http://rubygems.org/gems/parslet) ~> 1.0
+* [parslet](http://kschiess.github.io/parslet/) ~> 1.0
 * [gserver](https://rubygems.org/gems/gserver) ~> 0.0
 
 ## Install
