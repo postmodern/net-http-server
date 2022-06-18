@@ -9,9 +9,9 @@ has_yard: true
 
 metadata:
   documentation_uri: https://rubydoc.info/gems/net-http-server
-  source_code_uri:   https://github.com/postmodern/net-http-server.rb
-  bug_tracker_uri:   https://github.com/postmodern/net-http-server.rb/issues
-  changelog_uri:     https://github.com/postmodern/net-http-server.rb/blob/master/ChangeLog.md
+  source_code_uri:   https://github.com/postmodern/net-http-server
+  bug_tracker_uri:   https://github.com/postmodern/net-http-server/issues
+  changelog_uri:     https://github.com/postmodern/net-http-server/blob/master/ChangeLog.md
   rubygems_mfa_required: 'true'
 
 dependencies:
