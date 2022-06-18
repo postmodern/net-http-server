@@ -9,7 +9,7 @@ module Net
       #
       # * [Thin](https://github.com/macournoyer/thin/blob/master/ext/thin_parser/common.rl)
       # * [Unicorn](https://github.com/defunkt/unicorn/blob/master/ext/unicorn_http/unicorn_http_common.rl)
-      # * [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616.html)
+      # * [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html)
       #
       class Parser < Parslet::Parser
 
