@@ -1,10 +1,11 @@
 ### 0.2.3 / 2022-06-18
 
 * Add [gserver] ~> 0.0 as a dependency.
+* Switched to using Ruby 2.x keyword arguments.
 * Fix a bug in {Rack::Handler::HTTP} where the URI `query` string was not being
   properly loaded.
-* Fixed a bug in {Net::HTTP::Parser} where the older `absnt?` method was being
-  used instead of the newer `absent?` method.
+* Fixed a bug in {Net::HTTP::Server::Parser} where the older `absnt?` method
+  was being used instead of the newer `absent?` method.
 
 ### 0.2.2 / 2012-09-08
 
