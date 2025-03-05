@@ -57,6 +57,4 @@ $ gem install net-http-server
 
 ## Copyright
 
-Copyright (c) 2011-2022 Hal Brodigan
-
 See {file:LICENSE.txt} for details.
