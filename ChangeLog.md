@@ -1,3 +1,9 @@
+### 0.2.4 / 2024-03-04
+
+* Support Ruby 3.4.0:
+  * No longer use mutable String literals, and instead use
+    `String.new(encoding: Encoding::UTF_8)` to fix warnings under Ruby 3.4.0.
+
 ### 0.2.3 / 2022-06-18
 
 * Add [gserver] ~> 0.0 as a dependency.
