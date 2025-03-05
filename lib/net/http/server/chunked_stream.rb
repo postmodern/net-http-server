@@ -22,7 +22,7 @@ module Net
         def initialize(socket)
           super(socket)
 
-          @buffer = ''
+          @buffer = String.new(encoding: Encoding::UTF_8)
         end
 
         #

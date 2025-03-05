@@ -22,7 +22,7 @@ module Net
         #   The raw HTTP Request or `nil` if the Request was malformed.
         #
         def read_request(stream)
-          buffer = ''
+          buffer = String.new(encoding: Encoding::UTF_8)
 
           begin
             request_line = stream.readline("\r\n")

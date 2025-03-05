@@ -14,7 +14,7 @@ describe Net::HTTP::Server::Stream do
 
     it "should read an amount of data from a socket, directly into a buffer" do
       length = 3
-      buffer = ''
+      buffer = String.new(encoding: Encoding::UTF_8)
 
       stream = described_class.new(StringIO.new(data))
       stream.read(length,buffer)

@@ -76,7 +76,7 @@ module Net
         # @since 0.2.0
         #
         def body
-          buffer = ''
+          buffer = String.new(encoding: Encoding::UTF_8)
 
           each { |chunk| buffer << chunk }
           return buffer

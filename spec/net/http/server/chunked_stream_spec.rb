@@ -23,7 +23,7 @@ describe Net::HTTP::Server::ChunkedStream do
 
     it "should read an amount of data from a socket, directly into a buffer" do
       length = 3
-      buffer = ''
+      buffer = String.new(encoding: Encoding::UTF_8)
 
       socket = StringIO.new("%x\r\n%s\r\n0\r\n\r\n" % [data.length, data])
       stream = described_class.new(socket)
