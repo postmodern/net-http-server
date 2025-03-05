@@ -1,4 +1,4 @@
-### 0.2.4 / 2024-03-04
+### 0.2.4 / 2025-03-04
 
 * Support Ruby 3.4.0:
   * No longer use mutable String literals, and instead use
